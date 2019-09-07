@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1565561821 source:c:\users\stardust\documents\codeblockprojects\cg\src\viewport.cpp
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1368290960 c:\users\stardust\documents\codeblockprojects\cg\shared\windows\include\gl\glut.h
+	"freeglut_std.h"
+
+1368290960 c:\users\stardust\documents\codeblockprojects\cg\shared\windows\include\gl\freeglut_std.h
+	<windows.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1565564229 source:c:\users\stardust\documents\codeblockprojects\cg\src\triangle.cpp
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1567891193 source:c:\users\stardust\documents\codeblockprojects\cg\src\main.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<math.h>
+	"extras.h"
+	<iostream>
+	<time.h>
+
+1566924478 c:\users\stardust\documents\codeblockprojects\cg\src\extras.h
+
+1272402996 c:\users\stardust\documents\codeblockprojects\cg\shared\windows\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
