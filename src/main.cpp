@@ -7,6 +7,7 @@
 #include "extras.h"
 #include <iostream>
 #include <time.h>
+//#include <player.h>
 
 using namespace std;
 
@@ -17,10 +18,26 @@ int   last_x, last_y;
 int   width, height;
 bool isOrtho = false;
 
+///Player
+float playerPositionX = 0;
+float playerPositonY = 0;
+float playerSpeedX = 0.003;
+
 /// Functions
 void init(void)
 {
     initLight(width, height); // Função extra para tratar iluminação.
+}
+
+void drawPlayer()
+{
+    playerPositionX += playerSpeedX;
+    glPushMatrix();
+    setColor(0,0,1);
+    glTranslatef(playerPositionX, playerPositonY -2, 0);
+    glScalef(1, 0.4, 0);
+    glutSolidCube(0.4);
+    glPopMatrix();
 }
 
 void drawObject()
@@ -41,6 +58,8 @@ void display(void)
     glRotatef( rotationX, 1.0, 0.0, 0.0 );
     drawObject();
     glPopMatrix();
+
+    drawPlayer();
 
     glutSwapBuffers();
 }
@@ -79,8 +98,6 @@ void keyboard (unsigned char key, int x, int y)
     case 27:
         exit(0);
         break;
-
-        break;
     case 'p':
         isOrtho = !isOrtho;
         reshape(1000, 600);
@@ -98,6 +115,7 @@ void motion(int x, int y )
 }
 
 // Mouse callback
+
 void mouse(int button, int state, int x, int y)
 {
     if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
@@ -112,6 +130,18 @@ void mouse(int button, int state, int x, int y)
     if(button == 4) // Scroll Down
     {
         zdist-=1.0f;
+    }
+}
+
+void mousePassive(int x, int y)
+{
+    if(x < 300)
+    {
+        playerSpeedX = -fabs(playerSpeedX);
+    }
+    else
+    {
+        playerSpeedX = fabs(playerSpeedX);
     }
 }
 
@@ -130,6 +160,7 @@ int main(int argc, char** argv)
     glutMotionFunc( motion );
     glutKeyboardFunc(keyboard);
     glutIdleFunc(idle);
+    glutPassiveMotionFunc(mousePassive);
     glutMainLoop();
 
     return 0;
