@@ -20,8 +20,10 @@ bool isOrtho = false;
 
 ///Player
 float playerPositionX = 0;
-float playerPositonY = 0;
-float playerSpeedX = 0.003;
+float playerPositonY = -2;
+float playerSizeX = 1;
+float playerSizeY = 0.4;
+float playerSizeZ = 0.4;
 
 /// Functions
 void init(void)
@@ -31,11 +33,10 @@ void init(void)
 
 void drawPlayer()
 {
-    playerPositionX += playerSpeedX;
     glPushMatrix();
     setColor(0,0,1);
-    glTranslatef(playerPositionX, playerPositonY -2, 0);
-    glScalef(1, 0.4, 0);
+    glTranslatef(playerPositionX, playerPositonY, 0);
+    glScalef(playerSizeX, playerSizeY, playerSizeZ);
     glutSolidCube(0.4);
     glPopMatrix();
 }
@@ -135,14 +136,20 @@ void mouse(int button, int state, int x, int y)
 
 void mousePassive(int x, int y)
 {
-    if(x < 300)
+    double posiAux = 0;
+
+    if(x == 500)
     {
-        playerSpeedX = -fabs(playerSpeedX);
+        posiAux = 0;
     }
-    else
-    {
-        playerSpeedX = fabs(playerSpeedX);
+    else if(x > 500) {
+        posiAux = (double)(x-500)/125;
     }
+    else if(x < 500){
+        posiAux = (double)(x-500)/125;
+    }
+    playerPositionX = (posiAux+(playerSizeX/2));
+    cout<< posiAux-(playerSizeX/2) <<endl;
 }
 
 /// Main
