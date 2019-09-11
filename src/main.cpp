@@ -11,6 +11,20 @@
 
 using namespace std;
 
+///Classes
+class vertice
+{
+public:
+    float x,y,z;
+};
+
+class triangle
+{
+public:
+    vertice v[3];
+};
+
+
 /// Globals
 float zdist = 5.0;
 float rotationX = 0.0, rotationY = 0.0;
@@ -41,8 +55,104 @@ void drawPlayer()
     glPopMatrix();
 }
 
+void CalculaNormal(triangle t, vertice *vn)
+{
+    vertice v_0 = t.v[0],
+            v_1 = t.v[1],
+            v_2 = t.v[2];
+    vertice v1, v2;
+    double len;
+
+    /* Encontra vetor v1 */
+    v1.x = v_1.x - v_0.x;
+    v1.y = v_1.y - v_0.y;
+    v1.z = v_1.z - v_0.z;
+
+    /* Encontra vetor v2 */
+    v2.x = v_2.x - v_0.x;
+    v2.y = v_2.y - v_0.y;
+    v2.z = v_2.z - v_0.z;
+
+    /* Calculo do produto vetorial de v1 e v2 */
+    vn->x = (v1.y * v2.z) - (v1.z  * v2.y);
+    vn->y = (v1.z * v2.x) - (v1.x * v2.z);
+    vn->z = (v1.x * v2.y) - (v1.y * v2.x);
+
+    /* normalizacao de n */
+    len = sqrt(pow(vn->x,2) + pow(vn->y,2) + pow(vn->z,2));
+
+    vn->x /= len;
+    vn->y /= len;
+    vn->z /= len;
+}
+
+void drawParedes()
+{
+    vertice vetorNormal;
+
+    vertice v[8] =
+    {
+        {-5.0f, -3.0f,  0.5f},
+        {-4.5f, -3.0f,  0.5f},
+        {-5.0f,  3.0f,  0.5f},
+        {-4.50f,  3.0f, 0.5f},
+        {-4.5f, -3.0f, 0},
+        {-4.5f, 3.0f, 0}
+    };
+
+    triangle t[10] = {{v[0], v[1], v[3]},
+        {v[0], v[3], v[2]},
+        {v[4], v[1], v[2]},
+        {v[4], v[3], v[5]}
+    };
+
+    for(int numT = 0; numT < 4; numT++)
+    {
+
+        setColor(0,0,0);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        glEnd();
+    }
+}
+
 void drawObject()
 {
+    vertice vetorNormal;
+
+    vertice v[8] =
+    {
+        {-5.0f, -3.0f,  0.0f},
+        {-5.0f, 3.0f,  0.0f},
+        {5.0f,  3.0f,  0.0f},
+        {5.0f,  -3.0f, 0.0f}
+    };
+
+
+    triangle t[10] = {{v[0], v[1], v[2]},
+        {v[0], v[3], v[2]},
+    };
+
+    for(int numT = 0; numT < 2; numT++)
+    {
+
+        setColor(0,0,139);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        glEnd();
+    }
+
+    /// Desenha paredes
+    //drawParedes();
+
+    ///Desenha Player
+    drawPlayer();
 }
 
 void display(void)
@@ -60,8 +170,6 @@ void display(void)
     drawObject();
     glPopMatrix();
 
-    drawPlayer();
-
     glutSwapBuffers();
 }
 
@@ -70,6 +178,29 @@ void idle ()
     glutPostRedisplay();
 }
 
+// Motion callback
+void motion(int x, int y )
+{
+    if(!isOrtho)
+    {
+        rotationX += (float) (y - last_y);
+        rotationY += (float) (x - last_x);
+
+        last_x = x;
+        last_y = y;
+    }
+    else
+    {
+        rotationX = 0;
+        rotationY = 0;
+
+        last_x = 0;
+        last_y = 0;
+
+    }
+}
+
+//reshape
 void reshape (int w, int h)
 {
     width = w;
@@ -79,7 +210,7 @@ void reshape (int w, int h)
     {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho( -4, 4, -4, 4, 0.01, 200.0);
+        glOrtho( -5, 5, -3, 3, 0.01, 200.0);
     }
     else
     {
@@ -101,18 +232,13 @@ void keyboard (unsigned char key, int x, int y)
         break;
     case 'p':
         isOrtho = !isOrtho;
+        rotationX = 0;
+        rotationY = 0;
+        last_x = 0;
+        last_y = 0;
+
         reshape(1000, 600);
     }
-}
-
-// Motion callback
-void motion(int x, int y )
-{
-    rotationX += (float) (y - last_y);
-    rotationY += (float) (x - last_x);
-
-    last_x = x;
-    last_y = y;
 }
 
 // Mouse callback
@@ -142,14 +268,16 @@ void mousePassive(int x, int y)
     {
         posiAux = 0;
     }
-    else if(x > 500) {
+    else if(x > 500)
+    {
         posiAux = (double)(x-500)/125;
+        playerPositionX = posiAux + playerSizeX/2;
     }
-    else if(x < 500){
+    else if(x < 500)
+    {
         posiAux = (double)(x-500)/125;
+        playerPositionX = posiAux - playerSizeX/2;
     }
-    playerPositionX = (posiAux+(playerSizeX/2));
-    cout<< posiAux-(playerSizeX/2) <<endl;
 }
 
 /// Main
