@@ -31,6 +31,7 @@ float rotationX = 0.0, rotationY = 0.0;
 int   last_x, last_y;
 int   width, height;
 bool isOrtho = false;
+bool isPaused = false;
 
 ///Player
 float playerPositionX = 0;
@@ -38,6 +39,13 @@ float playerPositonY = -2;
 float playerSizeX = 1;
 float playerSizeY = 0.4;
 float playerSizeZ = 0.4;
+
+///Bola
+float shooted = false;
+float ballSize = 0.09;
+
+///arrow
+float arrowSize = 0.09;
 
 /// Functions
 void init(void)
@@ -49,9 +57,32 @@ void drawPlayer()
 {
     glPushMatrix();
     setColor(0,0,1);
-    glTranslatef(playerPositionX, playerPositonY, 0);
+    glTranslatef(playerPositionX, playerPositonY, 0.1);
     glScalef(playerSizeX, playerSizeY, playerSizeZ);
     glutSolidCube(0.4);
+    glPopMatrix();
+}
+
+void drawBall()
+{
+    glPushMatrix();
+    glTranslatef(0, 0, 0.1);
+    if(!shooted)
+    {
+        glTranslatef(playerPositionX, playerPositonY + playerSizeY/2, 0);
+    }
+    setColor(1,0,0);
+    glutSolidSphere(ballSize,100,100);
+    glPopMatrix();
+}
+
+void drawSeta()
+{
+    glPushMatrix();
+    glTranslatef(playerPositionX,playerPositonY + playerSizeY,0.1);
+    glRotatef(-90, 1,0,0);
+    setColor(1,0,0);
+    glutSolidCone(0.06, 0.9,100,100);
     glPopMatrix();
 }
 
@@ -153,6 +184,15 @@ void drawObject()
 
     ///Desenha Player
     drawPlayer();
+
+    ///Desenha Bola
+    drawBall();
+
+    ///Desenha Seta
+    if(!shooted)
+    {
+        drawSeta();
+    }
 }
 
 void display(void)
@@ -245,19 +285,23 @@ void keyboard (unsigned char key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+    if(isPaused)
     {
-        last_x = x;
-        last_y = y;
+        if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+        {
+            last_x = x;
+            last_y = y;
+        }
+        if(button == 3) // Scroll up
+        {
+            zdist+=1.0f;
+        }
+        if(button == 4) // Scroll Down
+        {
+            zdist-=1.0f;
+        }
     }
-    if(button == 3) // Scroll up
-    {
-        zdist+=1.0f;
-    }
-    if(button == 4) // Scroll Down
-    {
-        zdist-=1.0f;
-    }
+
 }
 
 void mousePassive(int x, int y)
