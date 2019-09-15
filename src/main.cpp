@@ -50,7 +50,8 @@ float ballPositionY = 0;
 float forcaBola = 0.01;
 
 ///arrow
-float arrowSize = 0.09;
+float arrowSize = 0.1;
+float arrowWidth = 0.06;
 float arrowAngle = 0;
 
 /// Functions
@@ -114,7 +115,7 @@ void drawSeta()
     glRotatef(arrowAngle,0,0,1);
     glRotatef(-90, 1,0,0);
     setColor(1,0,0);
-    glutSolidCone(0.06, 0.9,100,100);
+    glutSolidCone(arrowWidth, arrowSize,100,100);
     glPopMatrix();
 }
 
@@ -151,9 +152,10 @@ void CalculaNormal(triangle t, vertice *vn)
 
 void drawParedes()
 {
+    ///Parede Esquerda///
     vertice vetorNormal;
 
-    vertice v[8] =
+    vertice v[6] =
     {
         {-5.0f, -3.0f,  0.5f},
         {-4.5f, -3.0f,  0.5f},
@@ -165,19 +167,50 @@ void drawParedes()
 
     triangle t[10] = {{v[0], v[1], v[3]},
         {v[0], v[3], v[2]},
-        {v[4], v[1], v[2]},
+        {v[4], v[1], v[3]},
         {v[4], v[3], v[5]}
     };
 
     for(int numT = 0; numT < 4; numT++)
     {
 
-        setColor(0,0,0);
+        setColor(0,1,0);
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
         for(int j = 0; j < 3; j++) // vertices do triangulo
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        glEnd();
+    }
+
+    ///Parede Direita///
+    vertice vetorNormalP2;
+
+    vertice v2[6] =
+    {
+        {5.0f, -3.0f,  0.5f},
+        {4.5f, -3.0f,  0.5f},
+        {5.0f,  3.0f,  0.5f},
+        {4.50f,  3.0f, 0.5f},
+        {4.5f, -3.0f, 0},
+        {4.5f, 3.0f, 0}
+    };
+
+    triangle t2[10] = {{v2[0], v2[1], v2[3]},
+        {v2[0], v2[3], v2[2]},
+        {v2[4], v2[1], v2[3]},
+        {v2[4], v2[3], v2[5]}
+    };
+
+    for(int numT = 0; numT < 4; numT++)
+    {
+
+        setColor(0,1,0);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t[numT].v[j].z);
         glEnd();
     }
 }
@@ -212,7 +245,7 @@ void drawObject()
     }
 
     /// Desenha paredes
-    //drawParedes();
+    drawParedes();
 
     ///Desenha Player
     drawPlayer();
