@@ -26,9 +26,10 @@ public:
 
 
 /// Globals
-float zdist = 5.0;
-float rotationX = 0.0, rotationY = 0.0;
-int   last_x, last_y;
+float zdist = 7.0;
+float rotationX = -53.0, rotationY = 0.0;
+int   last_x = 452;
+int last_y = 205;
 int   width, height;
 bool isOrtho = false;
 bool isPaused = false;
@@ -94,17 +95,19 @@ void drawPlayer()
 void drawBall()
 {
     glPushMatrix();
-        glTranslatef(0, 0, 0.1);
-        if(!shooted){
-            glTranslatef(playerPositionX, playerPositonY + playerSizeY/2 , 0);
-        }
-        else {
-            ballPositionX += ballSpeedX;
-            ballPositionY += ballSpeedY;
-            glTranslatef(ballPositionX, ballPositionY, 0);
-        }
-        setColor(1,0,0);
-        glutSolidSphere(ballSize,100,100);
+    glTranslatef(0, 0, 0.1);
+    if(!shooted)
+    {
+        glTranslatef(playerPositionX, playerPositonY + playerSizeY/2, 0);
+    }
+    else
+    {
+        ballPositionX += ballSpeedX;
+        ballPositionY += ballSpeedY;
+        glTranslatef(ballPositionX, ballPositionY, 0);
+    }
+    setColor(1,0,0);
+    glutSolidSphere(ballSize,100,100);
     glPopMatrix();
 }
 
@@ -288,11 +291,13 @@ void motion(int x, int y )
 {
     if(!isOrtho)
     {
-        rotationX += (float) (y - last_y);
+       /* rotationX += (float) (y - last_y);
         rotationY += (float) (x - last_x);
 
-        last_x = x;
-        last_y = y;
+        last_x = x; //452 205
+        last_y = y;*/
+        rotationX = -53;
+        rotationY = 0;
     }
     else
     {
@@ -350,22 +355,19 @@ void keyboard (unsigned char key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if(isPaused)
+    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
     {
-        if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
-        {
-            last_x = x;
-            last_y = y;
-        }
-        if(button == 3) // Scroll up
-        {
-            zdist+=1.0f;
-        }
-        if(button == 4) // Scroll Down
-        {
-            zdist-=1.0f;
-        }
+        last_x = x;
+        last_y = y;
     }
+ /*   if(button == 3) // Scroll up
+    {
+        zdist+=1.0f;
+    }
+    if(button == 4) // Scroll Down
+    {
+        zdist-=1.0f;
+    }*/
     if ( button == GLUT_LEFT_BUTTON && !shooted)
     {
         ballPositionY = playerPositonY + playerSizeY/2;
