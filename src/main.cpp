@@ -43,14 +43,41 @@ float playerSizeZ = 0.4;
 ///Bola
 float shooted = false;
 float ballSize = 0.09;
+float ballSpeedX = 0;
+float ballSpeedY = 0;
+float ballPositionX = 0;
+float ballPositionY = 0;
+float forcaBola = 0.01;
 
 ///arrow
 float arrowSize = 0.09;
+float arrowAngle = 0;
 
 /// Functions
 void init(void)
 {
     initLight(width, height); // Função extra para tratar iluminação.
+}
+
+void calculaVelocidadeBola(int angulo)
+{
+    if(angulo < 0)
+    {
+        ballSpeedX = fabs(sin(angulo) * forcaBola);
+    }
+    else if(angulo > 0)
+    {
+        ballSpeedX = -fabs(sin(angulo) * forcaBola);
+    }
+    if (angulo == 0)
+    {
+        ballSpeedY = forcaBola;
+        ballSpeedX = 0;
+    }
+    else
+    {
+        ballSpeedY = fabs(cos(angulo) * forcaBola);
+    }
 }
 
 void drawPlayer()
@@ -66,13 +93,17 @@ void drawPlayer()
 void drawBall()
 {
     glPushMatrix();
-    glTranslatef(0, 0, 0.1);
-    if(!shooted)
-    {
-        glTranslatef(playerPositionX, playerPositonY + playerSizeY/2, 0);
-    }
-    setColor(1,0,0);
-    glutSolidSphere(ballSize,100,100);
+        glTranslatef(0, 0, 0.1);
+        if(!shooted){
+            glTranslatef(playerPositionX, playerPositonY + playerSizeY/2 , 0);
+        }
+        else {
+            ballPositionX += ballSpeedX;
+            ballPositionY += ballSpeedY;
+            glTranslatef(ballPositionX, ballPositionY, 0);
+        }
+        setColor(1,0,0);
+        glutSolidSphere(ballSize,100,100);
     glPopMatrix();
 }
 
@@ -80,6 +111,7 @@ void drawSeta()
 {
     glPushMatrix();
     glTranslatef(playerPositionX,playerPositonY + playerSizeY,0.1);
+    glRotatef(arrowAngle,0,0,1);
     glRotatef(-90, 1,0,0);
     setColor(1,0,0);
     glutSolidCone(0.06, 0.9,100,100);
@@ -301,8 +333,25 @@ void mouse(int button, int state, int x, int y)
             zdist-=1.0f;
         }
     }
-
+    if ( button == GLUT_LEFT_BUTTON && !shooted)
+    {
+        ballPositionY = playerPositonY + playerSizeY/2;
+        ballPositionX = playerPositionX;
+        calculaVelocidadeBola(arrowAngle);
+        shooted = true;
+    }
+    if(button == 3 && arrowAngle > -45) // Scroll up
+    {
+        arrowAngle -= 5;
+    }
+    if(button == 4 && arrowAngle < 45) // Scroll Down
+    {
+        arrowAngle += 5;
+    }
 }
+
+
+
 
 void mousePassive(int x, int y)
 {
