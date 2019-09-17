@@ -34,6 +34,14 @@
 			<Add library="GLU" />
 			<Add library="z" />
 		</Linker>
+		<Unit filename="Bloco.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="Ponto.h" />
+		<Unit filename="bloco.cpp" />
+		<Unit filename="extras.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="ponto.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

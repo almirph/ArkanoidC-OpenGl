@@ -7,6 +7,7 @@
 #include "extras.h"
 #include <iostream>
 #include <time.h>
+#include "Bloco.h"
 //#include <player.h>
 
 using namespace std;
@@ -24,7 +25,6 @@ public:
     vertice v[3];
 };
 
-
 /// Globals
 float zdist = 7.0;
 float rotationX = -53.0, rotationY = 0.0;
@@ -36,7 +36,7 @@ bool isPaused = false;
 
 ///Player
 float playerPositionX = 0;
-float playerPositonY = -2;
+float playerPositonY = -2.90;
 float playerSizeX = 1;
 float playerSizeY = 0.4;
 float playerSizeZ = 0.4;
@@ -48,10 +48,10 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.01;
+float forcaBola = 0.09;
 
 ///arrow
-float arrowSize = 0.1;
+float arrowSize = 0.9;
 float arrowWidth = 0.06;
 float arrowAngle = 0;
 
@@ -114,7 +114,7 @@ void drawBall()
 void drawSeta()
 {
     glPushMatrix();
-    glTranslatef(playerPositionX,playerPositonY + playerSizeY,0.1);
+    glTranslatef(playerPositionX,playerPositonY + playerSizeY/2,0.1);
     glRotatef(arrowAngle,0,0,1);
     glRotatef(-90, 1,0,0);
     setColor(1,0,0);
