@@ -90,3 +90,7 @@ void Bloco::setP4(Ponto p4) {
 void Bloco::setExibe(bool exibe) {
     this->exibe = exibe;
 }
+
+bool Bloco::getExibe() {
+    return this->exibe;
+}

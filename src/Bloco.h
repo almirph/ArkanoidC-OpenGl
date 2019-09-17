@@ -21,6 +21,7 @@ class Bloco {
         Ponto* getP2();
         Ponto* getP3();
         Ponto* getP4();
+        bool getExibe();
         void setP1(Ponto p1);
         void setP2(Ponto p2);
         void setP3(Ponto p3);

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <time.h>
 #include "Bloco.h"
+#include <vector>
 //#include <player.h>
 
 using namespace std;
@@ -55,7 +56,119 @@ float arrowSize = 0.9;
 float arrowWidth = 0.06;
 float arrowAngle = 0;
 
+///Blocos
+vector<Bloco> vetorBlocos;
+
 /// Functions
+void preencheVetorBlocos() {
+    /// ...
+    /// Preenche vetor com blocos
+    /// ...
+    /// ...
+    Ponto * p1 = new Ponto();
+    p1->setX(0.5);
+    p1->setY(0.5);
+
+    Ponto * p2 = new Ponto();
+    p2->setX(0.0);
+    p2->setY(0.5);
+
+    Ponto * p3 = new Ponto();
+    p3->setX(0.0);
+    p3->setY(0.0);
+
+    Ponto * p4 = new Ponto();
+    p4->setX(0.5);
+    p4->setY(0.0);
+
+    Bloco * b1 = new Bloco();
+    b1->setP1(*p1);
+    b1->setP2(*p2);
+    b1->setP3(*p3);
+    b1->setP4(*p4);
+
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p4;
+
+    vetorBlocos.push_back(*b1);
+}
+
+void CalculaNormal(triangle t, vertice *vn)
+{
+    vertice v_0 = t.v[0],
+            v_1 = t.v[1],
+            v_2 = t.v[2];
+    vertice v1, v2;
+    double len;
+
+    /* Encontra vetor v1 */
+    v1.x = v_1.x - v_0.x;
+    v1.y = v_1.y - v_0.y;
+    v1.z = v_1.z - v_0.z;
+
+    /* Encontra vetor v2 */
+    v2.x = v_2.x - v_0.x;
+    v2.y = v_2.y - v_0.y;
+    v2.z = v_2.z - v_0.z;
+
+    /* Calculo do produto vetorial de v1 e v2 */
+    vn->x = (v1.y * v2.z) - (v1.z  * v2.y);
+    vn->y = (v1.z * v2.x) - (v1.x * v2.z);
+    vn->z = (v1.x * v2.y) - (v1.y * v2.x);
+
+    /* normalizacao de n */
+    len = sqrt(pow(vn->x,2) + pow(vn->y,2) + pow(vn->z,2));
+
+    vn->x /= len;
+    vn->y /= len;
+    vn->z /= len;
+}
+
+void drawBlocos() {
+    for(int i=0; i<vetorBlocos.size(); i++){
+
+        cout<<"("<<vetorBlocos[i].getP1()->getX()<<","<<vetorBlocos[i].getP1()->getY()<<")"<<endl;
+        cout<<"("<<vetorBlocos[i].getP2()->getX()<<","<<vetorBlocos[i].getP2()->getY()<<")"<<endl;
+        cout<<"("<<vetorBlocos[i].getP3()->getX()<<","<<vetorBlocos[i].getP3()->getY()<<")"<<endl;
+        cout<<"("<<vetorBlocos[i].getP4()->getX()<<","<<vetorBlocos[i].getP4()->getY()<<")"<<endl;
+
+
+        /// Se o bloco puder ser exibido, então exibimos (óbvio)
+        if(vetorBlocos[i].getExibe()) {
+            cout<<"Exibe bloco..."<<endl;
+
+            ///Parede Esquerda///
+            vertice vetorNormal;
+            vertice v[4] =
+            {
+                {vetorBlocos[i].getP1()->getX(), vetorBlocos[i].getP1()->getY(),  0.5f},  /// P1
+                {vetorBlocos[i].getP2()->getX(), vetorBlocos[i].getP2()->getY(),  0.5f},  /// P2
+                {vetorBlocos[i].getP3()->getX(),  vetorBlocos[i].getP3()->getY(),  0.5f}, /// P3
+                {vetorBlocos[i].getP4()->getX(),  vetorBlocos[i].getP4()->getY(), 0.5f}   /// P4
+            };
+
+            triangle t[10] = {
+                {v[3], v[0], v[1]},
+                {v[1], v[2], v[3]},
+            };
+
+            for(int numT = 0; numT < 4; numT++)
+            {
+
+                setColor(1,1,1);
+                glBegin(GL_TRIANGLES);
+                CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+                glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+                for(int j = 0; j < 3; j++) // vertices do triangulo
+                    glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+                glEnd();
+            }
+        }
+    }
+}
+
 void init(void)
 {
     initLight(width, height); // Função extra para tratar iluminação.
@@ -122,39 +235,11 @@ void drawSeta()
     glPopMatrix();
 }
 
-void CalculaNormal(triangle t, vertice *vn)
-{
-    vertice v_0 = t.v[0],
-            v_1 = t.v[1],
-            v_2 = t.v[2];
-    vertice v1, v2;
-    double len;
-
-    /* Encontra vetor v1 */
-    v1.x = v_1.x - v_0.x;
-    v1.y = v_1.y - v_0.y;
-    v1.z = v_1.z - v_0.z;
-
-    /* Encontra vetor v2 */
-    v2.x = v_2.x - v_0.x;
-    v2.y = v_2.y - v_0.y;
-    v2.z = v_2.z - v_0.z;
-
-    /* Calculo do produto vetorial de v1 e v2 */
-    vn->x = (v1.y * v2.z) - (v1.z  * v2.y);
-    vn->y = (v1.z * v2.x) - (v1.x * v2.z);
-    vn->z = (v1.x * v2.y) - (v1.y * v2.x);
-
-    /* normalizacao de n */
-    len = sqrt(pow(vn->x,2) + pow(vn->y,2) + pow(vn->z,2));
-
-    vn->x /= len;
-    vn->y /= len;
-    vn->z /= len;
-}
-
 void drawParedes()
 {
+    /// Desenha os blocos
+    drawBlocos();
+
     ///Parede Esquerda///
     vertice vetorNormal;
 
@@ -411,6 +496,7 @@ void mousePassive(int x, int y)
 /// Main
 int main(int argc, char** argv)
 {
+    preencheVetorBlocos();
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize (1000, 600);
