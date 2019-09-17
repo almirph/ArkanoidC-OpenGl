@@ -59,38 +59,40 @@ float arrowAngle = 0;
 ///Blocos
 vector<Bloco> vetorBlocos;
 
+void PreencheListaCom1Bloco() {
+
+
+}
+
 /// Functions
-void preencheVetorBlocos() {
+void preencheVetorBlocos()
+{
     /// ...
     /// Preenche vetor com blocos
     /// ...
     /// ...
-    Ponto * p1 = new Ponto();
-    p1->setX(0.5);
-    p1->setY(0.5);
+    Ponto p1;
+    p1.setX(0.5);
+    p1.setY(0.5);
 
-    Ponto * p2 = new Ponto();
-    p2->setX(0.0);
-    p2->setY(0.5);
+    Ponto p2;
+    p2.setX(0.0);
+    p2.setY(0.5);
 
-    Ponto * p3 = new Ponto();
-    p3->setX(0.0);
-    p3->setY(0.0);
+    Ponto p3;
+    p3.setX(0.0);
+    p3.setY(0.0);
 
-    Ponto * p4 = new Ponto();
-    p4->setX(0.5);
-    p4->setY(0.0);
+    Ponto p4;
+    p4.setX(0.5);
+    p4.setY(0.0);
 
     Bloco * b1 = new Bloco();
-    b1->setP1(*p1);
-    b1->setP2(*p2);
-    b1->setP3(*p3);
-    b1->setP4(*p4);
 
-    delete p1;
-    delete p2;
-    delete p3;
-    delete p4;
+    b1->setP1(p1);
+    b1->setP2(p2);
+    b1->setP3(p3);
+    b1->setP4(p4);
 
     vetorBlocos.push_back(*b1);
 }
@@ -126,8 +128,10 @@ void CalculaNormal(triangle t, vertice *vn)
     vn->z /= len;
 }
 
-void drawBlocos() {
-    for(int i=0; i<vetorBlocos.size(); i++){
+void drawBlocos()
+{
+    for(int i=0; i<vetorBlocos.size(); i++)
+    {
 
         cout<<"("<<vetorBlocos[i].getP1()->getX()<<","<<vetorBlocos[i].getP1()->getY()<<")"<<endl;
         cout<<"("<<vetorBlocos[i].getP2()->getX()<<","<<vetorBlocos[i].getP2()->getY()<<")"<<endl;
@@ -136,25 +140,42 @@ void drawBlocos() {
 
 
         /// Se o bloco puder ser exibido, então exibimos (óbvio)
-        if(vetorBlocos[i].getExibe()) {
+        if(vetorBlocos[i].getExibe())
+        {
             cout<<"Exibe bloco..."<<endl;
 
-            ///Parede Esquerda///
+            /// Parede Esquerda ///
             vertice vetorNormal;
-            vertice v[4] =
+            vertice v[8] =
             {
-                {vetorBlocos[i].getP1()->getX(), vetorBlocos[i].getP1()->getY(),  0.5f},  /// P1
-                {vetorBlocos[i].getP2()->getX(), vetorBlocos[i].getP2()->getY(),  0.5f},  /// P2
-                {vetorBlocos[i].getP3()->getX(),  vetorBlocos[i].getP3()->getY(),  0.5f}, /// P3
-                {vetorBlocos[i].getP4()->getX(),  vetorBlocos[i].getP4()->getY(), 0.5f}   /// P4
+                {vetorBlocos[i].getP1()->getX(), vetorBlocos[i].getP1()->getY(),  0.001f},  /// P1
+                {vetorBlocos[i].getP2()->getX(), vetorBlocos[i].getP2()->getY(),  0.001f},  /// P2
+                {vetorBlocos[i].getP3()->getX(),  vetorBlocos[i].getP3()->getY(),  0.001f}, /// P3
+                {vetorBlocos[i].getP4()->getX(),  vetorBlocos[i].getP4()->getY(), 0.001f},   /// P4
+                {vetorBlocos[i].getP1()->getX(), vetorBlocos[i].getP1()->getY(),  0.5f},  /// P5
+                {vetorBlocos[i].getP2()->getX(), vetorBlocos[i].getP2()->getY(),  0.5f},  /// P6
+                {vetorBlocos[i].getP3()->getX(),  vetorBlocos[i].getP3()->getY(),  0.5f}, /// P7
+                {vetorBlocos[i].getP4()->getX(),  vetorBlocos[i].getP4()->getY(), 0.5f},   /// P8
+
             };
 
-            triangle t[10] = {
+            triangle t[12] =
+            {
                 {v[3], v[0], v[1]},
                 {v[1], v[2], v[3]},
+                {v[7], v[2], v[3]},
+                {v[2], v[7], v[6]},
+                {v[3], v[0], v[4]},
+                {v[3], v[4], v[7]},
+                {v[2], v[1], v[5]},
+                {v[2], v[5], v[6]},
+                {v[1], v[5], v[4]},
+                {v[1], v[4], v[0]},
+                {v[6], v[7], v[4]},
+                {v[6], v[4], v[5]}
             };
 
-            for(int numT = 0; numT < 4; numT++)
+            for(int numT = 0; numT < 12; numT++)
             {
 
                 setColor(1,1,1);
@@ -237,29 +258,32 @@ void drawSeta()
 
 void drawParedes()
 {
-    /// Desenha os blocos
-    drawBlocos();
 
+    drawBlocos();
     ///Parede Esquerda///
     vertice vetorNormal;
 
-    vertice v[6] =
+    vertice v[8] =
     {
         {-5.0f, -3.0f,  0.5f},
-        {-4.5f, -3.0f,  0.5f},
+        {-4.8f, -3.0f,  0.5f},
         {-5.0f,  3.0f,  0.5f},
-        {-4.50f,  3.0f, 0.5f},
-        {-4.5f, -3.0f, 0},
-        {-4.5f, 3.0f, 0}
+        {-4.8f,  3.0f, 0.5f},
+        {-4.8f, -3.0f, 0},
+        {-4.8f, 3.0f, 0},
+        {-5.0f,  -3.0f,  0},
+        {-5.0f,  3.0f, 0},
     };
 
     triangle t[10] = {{v[0], v[1], v[3]},
-        {v[0], v[3], v[2]},
-        {v[4], v[1], v[3]},
-        {v[4], v[3], v[5]}
+        {v[3], v[2], v[0]},
+        {v[1], v[4], v[5]},
+        {v[5], v[3], v[1]},
+        {v[6], v[7], v[2]},
+        {v[2], v[0], v[6]}
     };
 
-    for(int numT = 0; numT < 4; numT++)
+    for(int numT = 0; numT < 6; numT++)
     {
 
         setColor(0,1,0);
@@ -277,11 +301,11 @@ void drawParedes()
     vertice v2[6] =
     {
         {5.0f, -3.0f,  0.5f},
-        {4.5f, -3.0f,  0.5f},
+        {4.8f, -3.0f,  0.5f},
         {5.0f,  3.0f,  0.5f},
-        {4.50f,  3.0f, 0.5f},
-        {4.5f, -3.0f, 0},
-        {4.5f, 3.0f, 0}
+        {4.8f,  3.0f, 0.5f},
+        {4.8f, -3.0f, 0},
+        {4.8f, 3.0f, 0}
     };
 
     triangle t2[10] = {{v2[0], v2[1], v2[3]},
@@ -298,7 +322,39 @@ void drawParedes()
         CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
         for(int j = 0; j < 3; j++) // vertices do triangulo
-            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t[numT].v[j].z);
+            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
+        glEnd();
+    }
+
+    ///Parede cima
+
+    vertice vetorNormalP3;
+
+    vertice v3[6] =
+    {
+        {-4.8f, 2.8f, 0},
+        {4.8f, 2.8f, 0},
+        {4.8f, 2.8f, 0.5f},
+        {-4.8f, 2.8f, 0.5f},
+        {-4.8f, 3.0f, 0.5f},
+        {4.8f, 3.0f, 0.5f}
+    };
+
+    triangle t3[10] = {{v3[2], v3[1], v3[0]},
+        {v3[0], v3[3], v3[2]},
+        {v3[5], v3[2], v3[3]},
+        {v3[3], v3[4], v3[5]}
+    };
+
+    for(int numT = 0; numT < 4; numT++)
+    {
+
+        setColor(0,1,0);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
         glEnd();
     }
 }
@@ -376,13 +432,13 @@ void motion(int x, int y )
 {
     if(!isOrtho)
     {
-       /* rotationX += (float) (y - last_y);
-        rotationY += (float) (x - last_x);
+         rotationX += (float) (y - last_y);
+         rotationY += (float) (x - last_x);
 
-        last_x = x; //452 205
-        last_y = y;*/
-        rotationX = -53;
-        rotationY = 0;
+         last_x = x; //452 205
+         last_y = y;
+        //rotationX = -53;
+        //rotationY = 0;
     }
     else
     {
@@ -445,14 +501,14 @@ void mouse(int button, int state, int x, int y)
         last_x = x;
         last_y = y;
     }
- /*   if(button == 3) // Scroll up
-    {
-        zdist+=1.0f;
-    }
-    if(button == 4) // Scroll Down
-    {
-        zdist-=1.0f;
-    }*/
+    /*   if(button == 3) // Scroll up
+       {
+           zdist+=1.0f;
+       }
+       if(button == 4) // Scroll Down
+       {
+           zdist-=1.0f;
+       }*/
     if ( button == GLUT_LEFT_BUTTON && !shooted)
     {
         ballPositionY = playerPositonY + playerSizeY/2;

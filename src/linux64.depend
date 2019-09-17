@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1568684790 source:/ice/Downloads/ArkanoidC-OpenGl/src/main.cpp
+1568762082 source:/ice/Downloads/ArkanoidC-OpenGl/src/main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -12,20 +12,20 @@
 	"Bloco.h"
 	<vector>
 
-1568678905 /ice/Downloads/ArkanoidC-OpenGl/src/extras.h
+1568759186 /ice/Downloads/ArkanoidC-OpenGl/src/extras.h
 
-1568683619 source:/ice/Downloads/ArkanoidC-OpenGl/src/bloco.cpp
+1568759186 source:/ice/Downloads/ArkanoidC-OpenGl/src/bloco.cpp
 	<iostream>
 	"Bloco.h"
 
-1568683602 /ice/Downloads/ArkanoidC-OpenGl/src/Bloco.h
+1568759186 /ice/Downloads/ArkanoidC-OpenGl/src/Bloco.h
 	<iostream>
 	"Ponto.h"
 
-1568680192 /ice/Downloads/ArkanoidC-OpenGl/src/Ponto.h
+1568759186 /ice/Downloads/ArkanoidC-OpenGl/src/Ponto.h
 	<iostream>
 
-1568680748 source:/ice/Downloads/ArkanoidC-OpenGl/src/ponto.cpp
+1568759186 source:/ice/Downloads/ArkanoidC-OpenGl/src/ponto.cpp
 	<iostream>
 	"Ponto.h"
 
