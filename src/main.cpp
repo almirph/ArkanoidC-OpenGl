@@ -49,7 +49,7 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.04;
+float forcaBola = 0.05;
 
 ///arrow
 float arrowSize = 0.9;
@@ -62,44 +62,72 @@ vector<Bloco*> vetorBlocos;
 /// Functions
 void preencheVetorBlocos()
 {
-        float espacamento = 0.2f;
-        float tamX = 1.361f;
-        float tamY = 0.5f;
-        float yBase1  = 2.8;
-        float xBase = -4.80f;
+    float espacamento = 0.2f;
+    float tamX = 1.361f;
+    float tamY = 0.5f;
+    float yBase1  = 2.8;
+    float xBase = -4.80f;
 
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<6; j++){
-                Ponto p1;
-                Ponto p2;
-                Ponto p3;
-                Ponto p4;
+    for(int i=0; i<3; i++)
+    {
+        for(int j=0; j<6; j++)
+        {
+            Ponto p1;
+            Ponto p2;
+            Ponto p3;
+            Ponto p4;
 
-                p1.setX(xBase + espacamento + tamX);
-                p1.setY(yBase1 - espacamento);
+            p1.setX(xBase + espacamento + tamX);
+            p1.setY(yBase1 - espacamento);
 
-                p2.setX(xBase + espacamento + tamX);
-                p2.setY(yBase1 - espacamento - tamY);
+            p2.setX(xBase + espacamento + tamX);
+            p2.setY(yBase1 - espacamento - tamY);
 
-                p3.setX(xBase + espacamento);
-                p3.setY(yBase1 - espacamento - tamY);
+            p3.setX(xBase + espacamento);
+            p3.setY(yBase1 - espacamento - tamY);
 
-                p4.setX(xBase + espacamento);
-                p4.setY(yBase1 - espacamento);
+            p4.setX(xBase + espacamento);
+            p4.setY(yBase1 - espacamento);
 
-                Bloco * b1 = new Bloco();
+            Bloco * b1 = new Bloco();
 
-                b1->setP1(p1);
-                b1->setP2(p2);
-                b1->setP3(p3);
-                b1->setP4(p4);
+            b1->setP1(p1);
+            b1->setP2(p2);
+            b1->setP3(p3);
+            b1->setP4(p4);
 
-                vetorBlocos.push_back(b1);
-                xBase += (espacamento + tamX);
-            }
-            xBase = -4.80f;
-            yBase1 -= (espacamento + tamY);
+            vetorBlocos.push_back(b1);
+            xBase += (espacamento + tamX);
         }
+        xBase = -4.80f;
+        yBase1 -= (espacamento + tamY);
+    }
+}
+
+void verificaColisaoBlocos()
+{
+    float ballX = ballPositionX - ballSize/2;
+    float ballY = ballPositionY - ballSize/2;
+    int i = 0;
+    for (i = 0; i< vetorBlocos.size(); i++)
+    {
+        if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
+        {
+            vetorBlocos[i]->setExibe(false);
+            ballSpeedY = -ballSpeedY;
+         /*   if(ballX < vetorBlocos[i]->getP2()->getX() &&  ballX > vetorBlocos[i]->getP3()->getX()) {
+
+                ballSpeedY = -ballSpeedY;
+                cout<<vetorBlocos[i]->getP2()->getX()<< "!!" << vetorBlocos[i]->getP3()->getX()<< endl;
+                cout<< ballX << endl;
+            }
+            if(ballY < vetorBlocos[i]->getP3()->getY()) {
+                ballSpeedX = -ballSpeedX;
+                cout<<vetorBlocos[i]->getP3()->getY()<< "!!" << vetorBlocos[i]->getP4()->getY()<< endl;
+                cout<< ballY << endl;
+            }*/
+        }
+    }
 }
 
 void CalculaNormal(triangle t, vertice *vn)
@@ -133,9 +161,10 @@ void CalculaNormal(triangle t, vertice *vn)
     vn->z /= len;
 }
 
-void verificaGameOver() {
-if (ballPositionY <= -3 )
-    shooted = false;
+void verificaGameOver()
+{
+    if (ballPositionY <= -3 )
+        shooted = false;
 }
 
 void drawBlocos()
@@ -194,17 +223,22 @@ void drawBlocos()
     }
 }
 
-void verificaColisaoParede() {
-    if(ballPositionX <= -4.8 || ballPositionX >= 4.8) {
+void verificaColisaoParede()
+{
+    if(ballPositionX <= -4.8 || ballPositionX >= 4.8)
+    {
         ballSpeedX = -ballSpeedX;
     }
-    if(ballPositionY >= 3) {
+    if(ballPositionY >= 2.8)
+    {
         ballSpeedY = -ballSpeedY;
     }
 }
 
-void verificaColisaoPlayer () {
-    if(ballPositionX <= playerPositionX + playerSizeX/2 && ballPositionX >= playerPositionX - playerSizeX/2 && ballPositionY <= playerPositonY + playerSizeY/2){
+void verificaColisaoPlayer ()
+{
+    if(ballPositionX <= playerPositionX + playerSizeX/2 && ballPositionX >= playerPositionX - playerSizeX/2 && ballPositionY <= playerPositonY + playerSizeY/2)
+    {
         ballSpeedY = -ballSpeedY;
     }
 }
@@ -423,6 +457,7 @@ void drawObject()
         glEnd();
     }
 
+    verificaColisaoBlocos();
     /// Desenha paredes
     drawParedes();
 
@@ -515,7 +550,8 @@ void keyboard (unsigned char key, int x, int y)
     switch (tolower(key))
     {
     case 27:
-        for(int i=0; i<vetorBlocos.size(); i++){
+        for(int i=0; i<vetorBlocos.size(); i++)
+        {
             delete vetorBlocos[i];
         }
         exit(0);

@@ -42,7 +42,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1569099566 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
+1569105914 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
