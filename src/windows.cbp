@@ -38,7 +38,11 @@
 			<Add library="libglew32.dll.a" />
 			<Add directory="../shared/windows/lib" />
 		</Linker>
+		<Unit filename="Bloco.h" />
+		<Unit filename="Ponto.h" />
+		<Unit filename="bloco.cpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="ponto.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

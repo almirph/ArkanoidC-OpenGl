@@ -134,16 +134,10 @@ void drawBlocos()
     for(int i=0; i<vetorBlocos.size(); i++)
     {
 
-        cout<<"("<<vetorBlocos[i].getP1()->getX()<<","<<vetorBlocos[i].getP1()->getY()<<")"<<endl;
-        cout<<"("<<vetorBlocos[i].getP2()->getX()<<","<<vetorBlocos[i].getP2()->getY()<<")"<<endl;
-        cout<<"("<<vetorBlocos[i].getP3()->getX()<<","<<vetorBlocos[i].getP3()->getY()<<")"<<endl;
-        cout<<"("<<vetorBlocos[i].getP4()->getX()<<","<<vetorBlocos[i].getP4()->getY()<<")"<<endl;
-
 
         /// Se o bloco puder ser exibido, então exibimos (óbvio)
         if(vetorBlocos[i].getExibe())
         {
-            cout<<"Exibe bloco..."<<endl;
 
             /// Parede Esquerda ///
             vertice vetorNormal;
@@ -191,6 +185,14 @@ void drawBlocos()
     }
 }
 
+void verificaColisaoParede() {
+    if(ballPositionX <= -4.8 || ballPositionX >= 4.8 || ballPositionY >= 3) {
+        cout<<ballPositionX<< endl;
+        ballSpeedX = ballSpeedY;
+        ballSpeedY = ballSpeedX;
+    }
+}
+
 void init(void)
 {
     initLight(width, height); // Função extra para tratar iluminação.
@@ -229,6 +231,7 @@ void drawPlayer()
 
 void drawBall()
 {
+    verificaColisaoParede();
     glPushMatrix();
     glTranslatef(0, 0, 0.1);
     if(!shooted)
