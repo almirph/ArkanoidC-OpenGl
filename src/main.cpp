@@ -59,7 +59,8 @@ float arrowAngle = 0;
 ///Blocos
 vector<Bloco> vetorBlocos;
 
-void PreencheListaCom1Bloco() {
+void PreencheListaCom1Bloco()
+{
 
 
 }
@@ -265,14 +266,14 @@ void drawParedes()
 
     vertice v[8] =
     {
-        {-5.0f, -3.0f,  0.5f},
-        {-4.8f, -3.0f,  0.5f},
-        {-5.0f,  3.0f,  0.5f},
-        {-4.8f,  3.0f, 0.5f},
-        {-4.8f, -3.0f, 0},
-        {-4.8f, 3.0f, 0},
-        {-5.0f,  -3.0f,  0},
-        {-5.0f,  3.0f, 0},
+        {-5.0f, -3.0f,  0.5f}, ///V[0]
+        {-4.8f, -3.0f,  0.5f}, ///V[1]
+        {-5.0f,  3.0f,  0.5f}, ///V[2]
+        {-4.8f,  3.0f, 0.5f}, ///V[3]
+        {-4.8f, -3.0f, 0}, ///V[4]
+        {-4.8f, 3.0f, 0}, ///V[5]
+        {-5.0f,  -3.0f,  0}, ///V[6]
+        {-5.0f,  3.0f, 0}, ///V[7]
     };
 
     triangle t[10] = {{v[0], v[1], v[3]},
@@ -280,10 +281,12 @@ void drawParedes()
         {v[1], v[4], v[5]},
         {v[5], v[3], v[1]},
         {v[6], v[7], v[2]},
-        {v[2], v[0], v[6]}
+        {v[2], v[0], v[6]},
+        {v[6], v[4], v[1]},
+        {v[1], v[0], v[6]}
     };
 
-    for(int numT = 0; numT < 6; numT++)
+    for(int numT = 0; numT < 8; numT++)
     {
 
         setColor(0,1,0);
@@ -298,23 +301,29 @@ void drawParedes()
     ///Parede Direita///
     vertice vetorNormalP2;
 
-    vertice v2[6] =
+    vertice v2[8] =
     {
-        {5.0f, -3.0f,  0.5f},
-        {4.8f, -3.0f,  0.5f},
-        {5.0f,  3.0f,  0.5f},
-        {4.8f,  3.0f, 0.5f},
-        {4.8f, -3.0f, 0},
-        {4.8f, 3.0f, 0}
+        {5.0f, -3.0f,  0.5f}, ///V[0]
+        {4.8f, -3.0f,  0.5f}, ///V[1]
+        {5.0f,  3.0f,  0.5f}, ///V[2]
+        {4.8f,  3.0f, 0.5f}, ///V[3]
+        {4.8f, -3.0f, 0}, ///V[4]
+        {4.8f, 3.0f, 0}, ///V[5]
+        {5.0f, -3.0f, 0}, ///V[6]
+        {5.0f, 3.0f, 0}, ///V[7]
     };
 
     triangle t2[10] = {{v2[0], v2[1], v2[3]},
         {v2[0], v2[3], v2[2]},
         {v2[4], v2[1], v2[3]},
-        {v2[4], v2[3], v2[5]}
+        {v2[4], v2[3], v2[5]},
+        {v2[0], v2[6], v2[7]},
+        {v2[7], v2[2], v2[0]},
+        {v2[4], v2[6], v2[0]},
+        {v2[0], v2[1], v2[4]}
     };
 
-    for(int numT = 0; numT < 4; numT++)
+    for(int numT = 0; numT < 8; numT++)
     {
 
         setColor(0,1,0);
@@ -330,23 +339,29 @@ void drawParedes()
 
     vertice vetorNormalP3;
 
-    vertice v3[6] =
+    vertice v3[10] =
     {
-        {-4.8f, 2.8f, 0},
-        {4.8f, 2.8f, 0},
-        {4.8f, 2.8f, 0.5f},
-        {-4.8f, 2.8f, 0.5f},
-        {-4.8f, 3.0f, 0.5f},
-        {4.8f, 3.0f, 0.5f}
+        {-4.8f, 2.8f, 0},///V[0]
+        {4.8f, 2.8f, 0}, ///V[1]
+        {4.8f, 2.8f, 0.5f}, ///V[2]
+        {-4.8f, 2.8f, 0.5f}, ///V[3]
+        {-4.8f, 3.0f, 0.5f}, ///V[4]
+        {4.8f, 3.0f, 0.5f}, ///V[5]
+        {-5.0f, 3.0f, 0}, ///V[6]
+        {5.0f, 3.0f, 0}, ///V[7]
+        {-5.0f, 3.0f, 0.5f}, ///V[8]
+        {5.0f, 3.0f, 0.5f}, ///V[9]
     };
 
     triangle t3[10] = {{v3[2], v3[1], v3[0]},
         {v3[0], v3[3], v3[2]},
         {v3[5], v3[2], v3[3]},
-        {v3[3], v3[4], v3[5]}
+        {v3[3], v3[4], v3[5]},
+        {v3[6], v3[7], v3[9]},
+        {v3[9], v3[8], v3[6]},
     };
 
-    for(int numT = 0; numT < 4; numT++)
+    for(int numT = 0; numT < 6; numT++)
     {
 
         setColor(0,1,0);
@@ -432,11 +447,11 @@ void motion(int x, int y )
 {
     if(!isOrtho)
     {
-         rotationX += (float) (y - last_y);
-         rotationY += (float) (x - last_x);
+        rotationX += (float) (y - last_y);
+        rotationY += (float) (x - last_x);
 
-         last_x = x; //452 205
-         last_y = y;
+        last_x = x; //452 205
+        last_y = y;
         //rotationX = -53;
         //rotationY = 0;
     }

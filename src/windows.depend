@@ -42,7 +42,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1568577381 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
+1569090336 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -52,6 +52,8 @@
 	"extras.h"
 	<iostream>
 	<time.h>
+	"Bloco.h"
+	<vector>
 
 1272402996 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glew.h
 	<stddef.h>
@@ -73,4 +75,19 @@
 	<stdlib.h>
 
 1566924478 c:\users\stardust\desktop\arkanoidc-opengl\src\extras.h
+
+1569089315 source:c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.cpp
+	<iostream>
+	"Bloco.h"
+
+1569089315 c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.h
+	<iostream>
+	"Ponto.h"
+
+1569089315 c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.h
+	<iostream>
+
+1569089315 source:c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.cpp
+	<iostream>
+	"Ponto.h"
 
