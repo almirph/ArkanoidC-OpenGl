@@ -194,6 +194,11 @@ void verificaColisaoParede() {
     }
 }
 
+void verificaGameOver() {
+if (ballPositionY <= -3 )
+    shooted = false;
+}
+
 void verificaColisaoPlayer () {
     if(ballPositionX <= playerPositionX + playerSizeX/2 && ballPositionX >= playerPositionX - playerSizeX/2 && ballPositionY <= playerPositonY + playerSizeY/2){
         ballSpeedY = -ballSpeedY;
@@ -240,6 +245,7 @@ void drawBall()
 {
     verificaColisaoParede();
     verificaColisaoPlayer();
+    verificaGameOver();
     glPushMatrix();
     glTranslatef(0, 0, 0.1);
     if(!shooted)
