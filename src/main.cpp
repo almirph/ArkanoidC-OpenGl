@@ -49,7 +49,7 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.09;
+float forcaBola = 0.04;
 
 ///arrow
 float arrowSize = 0.9;
@@ -186,10 +186,17 @@ void drawBlocos()
 }
 
 void verificaColisaoParede() {
-    if(ballPositionX <= -4.8 || ballPositionX >= 4.8 || ballPositionY >= 3) {
-        cout<<ballPositionX<< endl;
-        ballSpeedX = ballSpeedY;
-        ballSpeedY = ballSpeedX;
+    if(ballPositionX <= -4.8 || ballPositionX >= 4.8) {
+        ballSpeedX = -ballSpeedX;
+    }
+    if(ballPositionY >= 3) {
+        ballSpeedY = -ballSpeedY;
+    }
+}
+
+void verificaColisaoPlayer () {
+    if(ballPositionX <= playerPositionX + playerSizeX/2 && ballPositionX >= playerPositionX - playerSizeX/2 && ballPositionY <= playerPositonY + playerSizeY/2){
+        ballSpeedY = -ballSpeedY;
     }
 }
 
@@ -232,6 +239,7 @@ void drawPlayer()
 void drawBall()
 {
     verificaColisaoParede();
+    verificaColisaoPlayer();
     glPushMatrix();
     glTranslatef(0, 0, 0.1);
     if(!shooted)
