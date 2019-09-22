@@ -55,7 +55,7 @@ float forcaBola = 0.02;
 ///arrow
 float arrowSize = 0.9;
 float arrowWidth = 0.06;
-float arrowAngle = 45;
+float arrowAngle = 30;
 
 /// Pause
 bool jogoPausado = false;
@@ -169,6 +169,16 @@ void verificaGameOver()
 {
     if (ballPositionY <= -2.9 )
         shooted = false;
+}
+
+void reinicia()
+{
+    shooted = false;
+    int i = 0;
+    for (i = 0; i< vetorBlocos.size(); i++)
+    {
+        vetorBlocos[i]->setExibe(true);
+    }
 }
 
 void drawBlocos()
@@ -296,7 +306,8 @@ void drawBall()
     }
     else
     {
-        if(!jogoPausado){
+        if(!jogoPausado)
+        {
             ballPositionX += ballSpeedX;
             ballPositionY += ballSpeedY;
         }
@@ -435,8 +446,10 @@ void drawParedes()
     }
 }
 
-void desenharPause() {
-    if(jogoPausado){
+void desenharPause()
+{
+    if(jogoPausado)
+    {
         ///Parede cima
 
         vertice vetorNormalP3;
@@ -454,7 +467,8 @@ void desenharPause() {
             {0.55f, -0.4f, 0.05f}
         };
 
-        triangle t3[4] = {
+        triangle t3[4] =
+        {
             {v3[1], v3[3], v3[2]},
             {v3[2], v3[0], v3[1]},
             {v3[4], v3[5], v3[7]},
@@ -581,6 +595,7 @@ void reshape (int w, int h)
 
     if(isOrtho)
     {
+        glViewport (0, 0, (GLsizei) w, (GLsizei) h);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glOrtho( -5, 5, -3, 3, 0.01, 200.0);
@@ -619,20 +634,28 @@ void keyboard (unsigned char key, int x, int y)
     case ' ':
         jogoPausado = !jogoPausado;
         break;
+    case 'r':
+        reinicia();
+        break;
     }
+
 }
+
 
 void specialKey(int key, int x, int y)
 {
+    bool isOrthoAux = isOrtho;
     if(GLUT_KEY_F12 == key && !isFullScreen)
     {
         glutFullScreen();
+        glutReshapeFunc(reshape);
         isFullScreen = true;
     }
     else if(GLUT_KEY_F12 == key && isFullScreen)
     {
         glutReshapeWindow(1000, 600);
         glutPositionWindow(0,0);
+        glutReshapeFunc(reshape);
         isFullScreen = false;
     }
 }
@@ -641,7 +664,8 @@ void specialKey(int key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if(!jogoPausado) {
+    if(!jogoPausado)
+    {
         if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
         {
             last_x = x;
@@ -662,7 +686,7 @@ void mouse(int button, int state, int x, int y)
             calculaVelocidadeBola(arrowAngle);
             shooted = true;
         }
-        if(button == 3 && arrowAngle > -45) // Scroll up
+        if(button == 3 && arrowAngle > -30) // Scroll up
         {
             arrowAngle -= 5;
             if(arrowAngle == 0)
@@ -670,7 +694,7 @@ void mouse(int button, int state, int x, int y)
                 arrowAngle = -5;
             }
         }
-        if(button == 4 && arrowAngle < 45) // Scroll Down
+        if(button == 4 && arrowAngle < 30) // Scroll Down
         {
             arrowAngle += 5;
             if(arrowAngle == 0)
@@ -681,12 +705,10 @@ void mouse(int button, int state, int x, int y)
     }
 }
 
-
-
-
 void mousePassive(int x, int y)
 {
-    if(!jogoPausado) {
+    if(!jogoPausado)
+    {
         if(x > 500 && playerPositionX < 4.18)
         {
             playerPositionX += 0.1;
