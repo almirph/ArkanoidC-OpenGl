@@ -57,6 +57,9 @@ float arrowSize = 0.9;
 float arrowWidth = 0.06;
 float arrowAngle = 45;
 
+/// Pause
+bool jogoPausado = false;
+
 ///Blocos
 vector<Bloco*> vetorBlocos;
 
@@ -293,8 +296,10 @@ void drawBall()
     }
     else
     {
-        ballPositionX += ballSpeedX;
-        ballPositionY += ballSpeedY;
+        if(!jogoPausado){
+            ballPositionX += ballSpeedX;
+            ballPositionY += ballSpeedY;
+        }
         glTranslatef(ballPositionX, ballPositionY, 0);
     }
     setColor(1,0,0);
@@ -430,6 +435,46 @@ void drawParedes()
     }
 }
 
+void desenharPause() {
+    if(jogoPausado){
+        ///Parede cima
+
+        vertice vetorNormalP3;
+
+        vertice v3[8] =
+        {
+            {-0.25f, 0.4f, 0.05f},
+            {-0.25f, -0.4f, 0.05f},
+            {0.05f, 0.4f, 0.05f},
+            {0.05f, -0.4f, 0.05f},
+
+            {0.25f, 0.4f, 0.05f},
+            {0.25f, -0.4f, 0.05f},
+            {0.55f, 0.4f, 0.05f},
+            {0.55f, -0.4f, 0.05f}
+        };
+
+        triangle t3[4] = {
+            {v3[1], v3[3], v3[2]},
+            {v3[2], v3[0], v3[1]},
+            {v3[4], v3[5], v3[7]},
+            {v3[7], v3[6], v3[4]}
+        };
+
+        for(int numT = 0; numT < 4; numT++)
+        {
+
+            setColor(1,0,0);
+            glBegin(GL_TRIANGLES);
+            CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
+            glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
+            for(int j = 0; j < 3; j++) // vertices do triangulo
+                glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
+            glEnd();
+        }
+    }
+}
+
 void drawObject()
 {
     vertice vetorNormal;
@@ -469,6 +514,9 @@ void drawObject()
     ///Desenha Bola
     drawBall();
 
+    /// Desenha pause
+    desenharPause();
+
     ///Desenha Seta
     verificaGameOver();
     if(!shooted)
@@ -485,6 +533,7 @@ void display(void)
     glLoadIdentity();
 
     gluLookAt (0.0, 0.0, zdist, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
 
     glPushMatrix();
     glRotatef( rotationY, 0.0, 1.0, 0.0 );
@@ -503,7 +552,7 @@ void idle ()
 // Motion callback
 void motion(int x, int y )
 {
-    if(!isOrtho)
+    if(!isOrtho && jogoPausado)
     {
         rotationX += (float) (y - last_y);
         rotationY += (float) (x - last_x);
@@ -567,6 +616,9 @@ void keyboard (unsigned char key, int x, int y)
 
         reshape(1000, 600);
         break;
+    case ' ':
+        jogoPausado = !jogoPausado;
+        break;
     }
 }
 
@@ -589,40 +641,42 @@ void specialKey(int key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
-    {
-        last_x = x;
-        last_y = y;
-    }
-    /*   if(button == 3) // Scroll up
-       {
-           zdist+=1.0f;
-       }
-       if(button == 4) // Scroll Down
-       {
-           zdist-=1.0f;
-       }*/
-    if ( button == GLUT_LEFT_BUTTON && !shooted)
-    {
-        ballPositionY = playerPositonY + playerSizeY/2;
-        ballPositionX = playerPositionX;
-        calculaVelocidadeBola(arrowAngle);
-        shooted = true;
-    }
-    if(button == 3 && arrowAngle > -45) // Scroll up
-    {
-        arrowAngle -= 5;
-        if(arrowAngle == 0)
+    if(!jogoPausado) {
+        if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
         {
-            arrowAngle = -5;
+            last_x = x;
+            last_y = y;
         }
-    }
-    if(button == 4 && arrowAngle < 45) // Scroll Down
-    {
-        arrowAngle += 5;
-        if(arrowAngle == 0)
+        /*   if(button == 3) // Scroll up
+           {
+               zdist+=1.0f;
+           }
+           if(button == 4) // Scroll Down
+           {
+               zdist-=1.0f;
+           }*/
+        if ( button == GLUT_LEFT_BUTTON && !shooted)
         {
-            arrowAngle = 5;
+            ballPositionY = playerPositonY + playerSizeY/2;
+            ballPositionX = playerPositionX;
+            calculaVelocidadeBola(arrowAngle);
+            shooted = true;
+        }
+        if(button == 3 && arrowAngle > -45) // Scroll up
+        {
+            arrowAngle -= 5;
+            if(arrowAngle == 0)
+            {
+                arrowAngle = -5;
+            }
+        }
+        if(button == 4 && arrowAngle < 45) // Scroll Down
+        {
+            arrowAngle += 5;
+            if(arrowAngle == 0)
+            {
+                arrowAngle = 5;
+            }
         }
     }
 }
@@ -632,15 +686,17 @@ void mouse(int button, int state, int x, int y)
 
 void mousePassive(int x, int y)
 {
-    if(x > 500 && playerPositionX < 4.18)
-    {
-        playerPositionX += 0.1;
+    if(!jogoPausado) {
+        if(x > 500 && playerPositionX < 4.18)
+        {
+            playerPositionX += 0.1;
+        }
+        else if(x < 500 && playerPositionX > -4.18)
+        {
+            playerPositionX -= 0.1;
+        }
+        glutWarpPointer( 500, 300 );
     }
-    else if(x < 500 && playerPositionX > -4.18)
-    {
-        playerPositionX -= 0.1;
-    }
-    glutWarpPointer( 500, 300 );
 }
 
 /// Main
