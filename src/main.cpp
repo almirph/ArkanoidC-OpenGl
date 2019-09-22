@@ -34,11 +34,12 @@ int last_y = 205;
 int   width, height;
 bool isOrtho = false;
 bool isPaused = false;
+bool isFullScreen = false;
 
 ///Player
 float playerPositionX = 0;
 float playerPositonY = -2.90;
-float playerSizeX = 1;
+float playerSizeX = 3;
 float playerSizeY = 0.4;
 float playerSizeZ = 0.4;
 
@@ -49,12 +50,12 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.05;
+float forcaBola = 0.02;
 
 ///arrow
 float arrowSize = 0.9;
 float arrowWidth = 0.06;
-float arrowAngle = 0;
+float arrowAngle = 45;
 
 ///Blocos
 vector<Bloco*> vetorBlocos;
@@ -115,17 +116,17 @@ void verificaColisaoBlocos()
         {
             vetorBlocos[i]->setExibe(false);
             ballSpeedY = -ballSpeedY;
-         /*   if(ballX < vetorBlocos[i]->getP2()->getX() &&  ballX > vetorBlocos[i]->getP3()->getX()) {
+            /*   if(ballX < vetorBlocos[i]->getP2()->getX() &&  ballX > vetorBlocos[i]->getP3()->getX()) {
 
-                ballSpeedY = -ballSpeedY;
-                cout<<vetorBlocos[i]->getP2()->getX()<< "!!" << vetorBlocos[i]->getP3()->getX()<< endl;
-                cout<< ballX << endl;
-            }
-            if(ballY < vetorBlocos[i]->getP3()->getY()) {
-                ballSpeedX = -ballSpeedX;
-                cout<<vetorBlocos[i]->getP3()->getY()<< "!!" << vetorBlocos[i]->getP4()->getY()<< endl;
-                cout<< ballY << endl;
-            }*/
+                   ballSpeedY = -ballSpeedY;
+                   cout<<vetorBlocos[i]->getP2()->getX()<< "!!" << vetorBlocos[i]->getP3()->getX()<< endl;
+                   cout<< ballX << endl;
+               }
+               if(ballY < vetorBlocos[i]->getP3()->getY()) {
+                   ballSpeedX = -ballSpeedX;
+                   cout<<vetorBlocos[i]->getP3()->getY()<< "!!" << vetorBlocos[i]->getP4()->getY()<< endl;
+                   cout<< ballY << endl;
+               }*/
         }
     }
 }
@@ -163,7 +164,7 @@ void CalculaNormal(triangle t, vertice *vn)
 
 void verificaGameOver()
 {
-    if (ballPositionY <= -3 )
+    if (ballPositionY <= -2.9 )
         shooted = false;
 }
 
@@ -237,7 +238,8 @@ void verificaColisaoParede()
 
 void verificaColisaoPlayer ()
 {
-    if(ballPositionX <= playerPositionX + playerSizeX/2 && ballPositionX >= playerPositionX - playerSizeX/2 && ballPositionY <= playerPositonY + playerSizeY/2)
+    //if(ballPositionX <= playerPositionX && ballPositionX >= playerPositionX && ballPositionY <= playerPositonY )
+    if(ballPositionX <= playerPositionX + playerSizeX/5 && ballPositionX >= playerPositionX - playerSizeX/5 && ballPositionY <= playerPositonY + playerSizeY/5)
     {
         ballSpeedY = -ballSpeedY;
     }
@@ -564,6 +566,22 @@ void keyboard (unsigned char key, int x, int y)
         last_y = 0;
 
         reshape(1000, 600);
+        break;
+    }
+}
+
+void specialKey(int key, int x, int y)
+{
+    if(GLUT_KEY_F12 == key && !isFullScreen)
+    {
+        glutFullScreen();
+        isFullScreen = true;
+    }
+    else if(GLUT_KEY_F12 == key && isFullScreen)
+    {
+        glutReshapeWindow(1000, 600);
+        glutPositionWindow(0,0);
+        isFullScreen = false;
     }
 }
 
@@ -594,10 +612,18 @@ void mouse(int button, int state, int x, int y)
     if(button == 3 && arrowAngle > -45) // Scroll up
     {
         arrowAngle -= 5;
+        if(arrowAngle == 0)
+        {
+            arrowAngle = -5;
+        }
     }
     if(button == 4 && arrowAngle < 45) // Scroll Down
     {
         arrowAngle += 5;
+        if(arrowAngle == 0)
+        {
+            arrowAngle = 5;
+        }
     }
 }
 
@@ -606,22 +632,15 @@ void mouse(int button, int state, int x, int y)
 
 void mousePassive(int x, int y)
 {
-    double posiAux = 0;
-
-    if(x == 500)
+    if(x > 500 && playerPositionX < 4.18)
     {
-        posiAux = 0;
+        playerPositionX += 0.1;
     }
-    else if(x > 500)
+    else if(x < 500 && playerPositionX > -4.18)
     {
-        posiAux = (double)(x-500)/125;
-        playerPositionX = posiAux + playerSizeX/2;
+        playerPositionX -= 0.1;
     }
-    else if(x < 500)
-    {
-        posiAux = (double)(x-500)/125;
-        playerPositionX = posiAux - playerSizeX/2;
-    }
+    glutWarpPointer( 500, 300 );
 }
 
 /// Main
@@ -633,15 +652,17 @@ int main(int argc, char** argv)
     glutInitWindowSize (1000, 600);
     glutInitWindowPosition (100, 100);
     glutCreateWindow (argv[0]);
+    //glutFullScreen();
     init();
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutMouseFunc( mouse );
     glutMotionFunc( motion );
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKey);
     glutIdleFunc(idle);
     glutPassiveMotionFunc(mousePassive);
+    glutSetCursor(GLUT_CURSOR_NONE);
     glutMainLoop();
-
     return 0;
 }
