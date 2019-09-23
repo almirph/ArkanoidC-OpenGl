@@ -59,6 +59,7 @@ float arrowAngle = 30;
 
 /// Pause
 bool jogoPausado = false;
+bool podeMovimentar = false;
 
 ///Blocos
 vector<Bloco*> vetorBlocos;
@@ -566,7 +567,7 @@ void idle ()
 // Motion callback
 void motion(int x, int y )
 {
-    if(!isOrtho && jogoPausado)
+    if(!isOrtho && (jogoPausado && podeMovimentar))
     {
         rotationX += (float) (y - last_y);
         rotationY += (float) (x - last_x);
@@ -576,7 +577,7 @@ void motion(int x, int y )
         //rotationX = -53;
         //rotationY = 0;
     }
-    else
+    else if(isOrtho)
     {
         rotationX = 0;
         rotationY = 0;
@@ -633,10 +634,19 @@ void keyboard (unsigned char key, int x, int y)
         break;
     case ' ':
         jogoPausado = !jogoPausado;
+
+        if(!jogoPausado){
+            podeMovimentar = false;
+        }
+
         break;
     case 'r':
         reinicia();
         break;
+    case 'c':
+        if(jogoPausado) {
+            podeMovimentar = !podeMovimentar;
+        }
     }
 
 }
