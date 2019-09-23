@@ -26,6 +26,12 @@ public:
     vertice v[3];
 };
 
+/*zdist = 7.0;
+    rotationX = -53.0;
+    rotationY = 0.0;
+    last_x = 452;
+    last_y = 205;*/
+
 /// Globals
 float zdist = 7.0;
 float rotationX = -53.0, rotationY = 0.0;
@@ -55,7 +61,7 @@ float forcaBola = 0.02;
 ///arrow
 float arrowSize = 0.9;
 float arrowWidth = 0.06;
-float arrowAngle = 30;
+float arrowAngle = -10;
 
 /// Pause
 bool jogoPausado = false;
@@ -110,26 +116,23 @@ void preencheVetorBlocos()
 
 void verificaColisaoBlocos()
 {
-    float ballX = ballPositionX - ballSize/2;
-    float ballY = ballPositionY - ballSize/2;
+    float ballX = ballPositionX;
+    float ballY = ballPositionY;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
         if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
         {
             vetorBlocos[i]->setExibe(false);
-            ballSpeedY = -ballSpeedY;
-            /*   if(ballX < vetorBlocos[i]->getP2()->getX() &&  ballX > vetorBlocos[i]->getP3()->getX()) {
-
-                   ballSpeedY = -ballSpeedY;
-                   cout<<vetorBlocos[i]->getP2()->getX()<< "!!" << vetorBlocos[i]->getP3()->getX()<< endl;
-                   cout<< ballX << endl;
-               }
-               if(ballY < vetorBlocos[i]->getP3()->getY()) {
-                   ballSpeedX = -ballSpeedX;
-                   cout<<vetorBlocos[i]->getP3()->getY()<< "!!" << vetorBlocos[i]->getP4()->getY()<< endl;
-                   cout<< ballY << endl;
-               }*/
+            //ballSpeedY = -ballSpeedY;
+            if(ballX - 0.035 < vetorBlocos[i]->getP2()->getX() &&  ballX - 0.035 > vetorBlocos[i]->getP3()->getX())
+            {
+                ballSpeedY = -ballSpeedY;
+            }
+            if(ballY - 0.035 > vetorBlocos[i]->getP3()->getY() && ballY - 0.035 < vetorBlocos[i]->getP4()->getY())
+            {
+                ballSpeedX = -ballSpeedX;
+            }
         }
     }
 }
@@ -167,7 +170,7 @@ void CalculaNormal(triangle t, vertice *vn)
 
 void verificaGameOver()
 {
-    if (ballPositionY <= -2.9 )
+    if (ballPositionY <= -2.85 )
         shooted = false;
 }
 
@@ -252,7 +255,7 @@ void verificaColisaoParede()
 void verificaColisaoPlayer ()
 {
     //if(ballPositionX <= playerPositionX && ballPositionX >= playerPositionX && ballPositionY <= playerPositonY )
-    if(ballPositionX <= playerPositionX + playerSizeX/5 && ballPositionX >= playerPositionX - playerSizeX/5 && ballPositionY <= playerPositonY + playerSizeY/5)
+    if(ballPositionX <= playerPositionX + playerSizeX/5 && ballPositionX >= playerPositionX - playerSizeX/4 && ballPositionY <= playerPositonY + playerSizeY/5)
     {
         ballSpeedY = -ballSpeedY;
     }
@@ -664,8 +667,7 @@ void specialKey(int key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if(!jogoPausado)
-    {
+    if(!jogoPausado){
         if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
         {
             last_x = x;
