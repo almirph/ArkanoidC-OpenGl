@@ -647,9 +647,12 @@ void keyboard (unsigned char key, int x, int y)
         reinicia();
         break;
     case 'c':
-        if(jogoPausado) {
-            podeMovimentar = !podeMovimentar;
+
+        podeMovimentar = !podeMovimentar;
+        if(podeMovimentar){
+            jogoPausado = true;
         }
+        break;
     }
 
 }
