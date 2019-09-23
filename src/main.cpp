@@ -41,6 +41,7 @@ int   width, height;
 bool isOrtho = false;
 bool isPaused = false;
 bool isFullScreen = false;
+bool isEndGame = false;
 
 ///Player
 float playerPositionX = 0;
@@ -185,6 +186,18 @@ void reinicia()
     }
 }
 
+bool verificaEndGame()
+{
+    int i = 0;
+    for (i = 0; i< vetorBlocos.size(); i++)
+    {
+        if(vetorBlocos[i]->getExibe()){
+           return false;
+        }
+    }
+    return true;
+}
+
 void drawBlocos()
 {
     for(int i=0; i<vetorBlocos.size(); i++)
@@ -290,17 +303,21 @@ void calculaVelocidadeBola(int angulo)
 
 void drawPlayer()
 {
-    glPushMatrix();
+    if(!isEndGame) {
+        glPushMatrix();
     setColor(0,0,1);
     glTranslatef(playerPositionX, playerPositonY, 0.1);
     glScalef(playerSizeX, playerSizeY, playerSizeZ);
     glutSolidCube(0.4);
     glPopMatrix();
+    }
+
 }
 
 void drawBall()
 {
-    verificaColisaoParede();
+    if(!isEndGame) {
+        verificaColisaoParede();
     verificaColisaoPlayer();
     glPushMatrix();
     glTranslatef(0, 0, 0.1);
@@ -320,17 +337,22 @@ void drawBall()
     setColor(1,0,0);
     glutSolidSphere(ballSize,100,100);
     glPopMatrix();
+    }
+
 }
 
 void drawSeta()
 {
-    glPushMatrix();
+    if(!isEndGame) {
+        glPushMatrix();
     glTranslatef(playerPositionX,playerPositonY + playerSizeY/2,0.1);
     glRotatef(arrowAngle,0,0,1);
     glRotatef(-90, 1,0,0);
     setColor(1,0,0);
     glutSolidCone(arrowWidth, arrowSize,100,100);
     glPopMatrix();
+    }
+
 }
 
 void drawParedes()
@@ -365,7 +387,10 @@ void drawParedes()
     for(int numT = 0; numT < 8; numT++)
     {
 
-        setColor(0,1,0);
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
@@ -401,8 +426,10 @@ void drawParedes()
 
     for(int numT = 0; numT < 8; numT++)
     {
-
-        setColor(0,1,0);
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
         glBegin(GL_TRIANGLES);
         CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
@@ -440,7 +467,10 @@ void drawParedes()
     for(int numT = 0; numT < 6; numT++)
     {
 
-        setColor(0,1,0);
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
         glBegin(GL_TRIANGLES);
         CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
@@ -512,8 +542,10 @@ void drawObject()
 
     for(int numT = 0; numT < 2; numT++)
     {
-
-        setColor(0,0,139);
+        if(!isEndGame)
+            setColor(0,0,139);
+        else
+            setColor(1,0,1);
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
@@ -521,7 +553,7 @@ void drawObject()
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
         glEnd();
     }
-
+    isEndGame = verificaEndGame();
     verificaColisaoBlocos();
     /// Desenha paredes
     drawParedes();
