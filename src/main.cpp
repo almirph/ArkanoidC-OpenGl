@@ -116,8 +116,8 @@ void preencheVetorBlocos()
 
 void verificaColisaoBlocos()
 {
-    float ballX = ballPositionX;
-    float ballY = ballPositionY;
+    float ballX = ballPositionX + ballSize;
+    float ballY = ballPositionY + ballSize;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
@@ -125,11 +125,11 @@ void verificaColisaoBlocos()
         {
             vetorBlocos[i]->setExibe(false);
             //ballSpeedY = -ballSpeedY;
-            if(ballX - 0.035 < vetorBlocos[i]->getP2()->getX() &&  ballX - 0.035 > vetorBlocos[i]->getP3()->getX())
+            if(ballX - 0.033 < vetorBlocos[i]->getP2()->getX() &&  ballX - 0.033 > vetorBlocos[i]->getP3()->getX())
             {
                 ballSpeedY = -ballSpeedY;
             }
-            if(ballY - 0.035 > vetorBlocos[i]->getP3()->getY() && ballY - 0.035 < vetorBlocos[i]->getP4()->getY())
+            if(ballY - 0.033 > vetorBlocos[i]->getP3()->getY() && ballY - 0.033 < vetorBlocos[i]->getP4()->getY())
             {
                 ballSpeedX = -ballSpeedX;
             }
