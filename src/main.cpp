@@ -577,6 +577,7 @@ void drawObject()
 
 void display(void)
 {
+    glutWarpPointer( 500, 300 );
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
@@ -764,7 +765,6 @@ void mousePassive(int x, int y)
         {
             playerPositionX -= 0.1;
         }
-        glutWarpPointer( 500, 300 );
     }
 }
 
