@@ -57,7 +57,7 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.02;
+float forcaBola = 0.06;
 
 ///arrow
 float arrowSize = 0.9;
@@ -172,7 +172,7 @@ void CalculaNormal(triangle t, vertice *vn)
 
 void verificaGameOver()
 {
-    if (ballPositionY <= -2.85 )
+    if (ballPositionY <= -2.9)
         shooted = false;
 }
 
@@ -577,7 +577,10 @@ void drawObject()
 
 void display(void)
 {
-    glutWarpPointer( 500, 300 );
+    if(!jogoPausado) {
+        glutWarpPointer( 500, 300 );
+    }
+
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
