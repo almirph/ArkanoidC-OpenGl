@@ -31,17 +31,14 @@ float rotationX = -53.0, rotationY = 0.0;
 int   last_x = 452;
 int last_y = 205;
 int   width, height;
+int qntVidas = 5;
 bool isOrtho = false;
-bool isPaused = false;
 bool isFullScreen = false;
 bool isEndGame = false;
 
 ///Player
 float playerPositionX = 0;
 float playerPositonY = -2.90;
-float playerSizeX = 3;
-float playerSizeY = 0.4;
-float playerSizeZ = 0.4;
 
 ///Bola
 float shooted = false;
@@ -281,7 +278,7 @@ void drawBall()
     glTranslatef(0, 0, 0.1);
     if(!shooted)
     {
-        glTranslatef(playerPositionX, playerPositonY + playerSizeY/2, 0);
+        glTranslatef(playerPositionX, playerPositonY, 0);
     }
     else
     {
@@ -302,13 +299,27 @@ void drawBall()
 void drawSeta()
 {
     if(!isEndGame) {
-        glPushMatrix();
-    glTranslatef(playerPositionX,playerPositonY + playerSizeY/2,0.1);
+    glPushMatrix();
+    glTranslatef(playerPositionX,playerPositonY,0.1);
     glRotatef(arrowAngle,0,0,1);
     glRotatef(-90, 1,0,0);
     setColor(1,0,0);
     glutSolidCone(arrowWidth, arrowSize,100,100);
     glPopMatrix();
+    }
+
+}
+
+void desenharVidas() {
+    float auxPos = 0.1;
+    for(int i=0; i<qntVidas; i++) {
+        glPushMatrix();
+            glTranslatef(auxPos -5, 2.9, 3);
+            setColor(1,0,0);
+            glutSolidSphere(ballSize/1.1,100,100);
+        glPopMatrix();
+
+        auxPos += 0.3;
     }
 
 }
@@ -390,6 +401,10 @@ void drawObject()
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
 
+    ///Desenha vidas
+    desenharVidas();
+
+    ///Desenha Blcos
     drawBlocos();
 
     ///Desenha Bola
@@ -555,7 +570,7 @@ void mouse(int button, int state, int x, int y)
         }
         if ( button == GLUT_LEFT_BUTTON && !shooted)
         {
-            ballPositionY = playerPositonY + playerSizeY/2;
+            ballPositionY = playerPositonY;
             ballPositionX = playerPositionX;
             calculaVelocidadeBola(arrowAngle);
             shooted = true;
