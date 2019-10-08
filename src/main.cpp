@@ -9,7 +9,6 @@
 #include <time.h>
 #include "Bloco.h"
 #include <vector>
-//#include <player.h>
 
 using namespace std;
 
@@ -25,12 +24,6 @@ class triangle
 public:
     vertice v[3];
 };
-
-/*zdist = 7.0;
-    rotationX = -53.0;
-    rotationY = 0.0;
-    last_x = 452;
-    last_y = 205;*/
 
 /// Globals
 float zdist = 7.0;
@@ -126,7 +119,7 @@ void verificaColisaoBlocos()
         if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
         {
             vetorBlocos[i]->setExibe(false);
-            //ballSpeedY = -ballSpeedY;
+
             if(ballX - 0.033 < vetorBlocos[i]->getP2()->getX() &&  ballX - 0.033 > vetorBlocos[i]->getP3()->getX())
             {
                 ballSpeedY = -ballSpeedY;
@@ -208,7 +201,6 @@ void drawBlocos()
         if(vetorBlocos[i]->getExibe())
         {
 
-            /// Parede Esquerda ///
             vertice vetorNormal;
             vertice v[8] =
             {
@@ -254,26 +246,6 @@ void drawBlocos()
     }
 }
 
-void verificaColisaoParede()
-{
-    if(ballPositionX <= -4.8 || ballPositionX >= 4.8)
-    {
-        ballSpeedX = -ballSpeedX;
-    }
-    if(ballPositionY >= 2.8)
-    {
-        ballSpeedY = -ballSpeedY;
-    }
-}
-
-void verificaColisaoPlayer ()
-{
-    //if(ballPositionX <= playerPositionX && ballPositionX >= playerPositionX && ballPositionY <= playerPositonY )
-    if(ballPositionX <= playerPositionX + playerSizeX/5 && ballPositionX >= playerPositionX - playerSizeX/4 && ballPositionY <= playerPositonY + playerSizeY/5)
-    {
-        ballSpeedY = -ballSpeedY;
-    }
-}
 
 void init(void)
 {
@@ -282,7 +254,7 @@ void init(void)
 
 void calculaVelocidadeBola(int angulo)
 {
-    if(angulo < 0)
+  /*  if(angulo < 0)
     {
         ballSpeedX = fabs(sin(angulo) * forcaBola);
     }
@@ -298,27 +270,13 @@ void calculaVelocidadeBola(int angulo)
     else
     {
         ballSpeedY = fabs(cos(angulo) * forcaBola);
-    }
+    }*/
 }
 
-void drawPlayer()
-{
-    if(!isEndGame) {
-        glPushMatrix();
-    setColor(0,0,1);
-    glTranslatef(playerPositionX, playerPositonY, 0.1);
-    glScalef(playerSizeX, playerSizeY, playerSizeZ);
-    glutSolidCube(0.4);
-    glPopMatrix();
-    }
-
-}
 
 void drawBall()
 {
     if(!isEndGame) {
-        verificaColisaoParede();
-    verificaColisaoPlayer();
     glPushMatrix();
     glTranslatef(0, 0, 0.1);
     if(!shooted)
@@ -355,130 +313,6 @@ void drawSeta()
 
 }
 
-void drawParedes()
-{
-
-    drawBlocos();
-    ///Parede Esquerda///
-    vertice vetorNormal;
-
-    vertice v[8] =
-    {
-        {-5.0f, -3.0f,  0.5f}, ///V[0]
-        {-4.8f, -3.0f,  0.5f}, ///V[1]
-        {-5.0f,  3.0f,  0.5f}, ///V[2]
-        {-4.8f,  3.0f, 0.5f}, ///V[3]
-        {-4.8f, -3.0f, 0}, ///V[4]
-        {-4.8f, 3.0f, 0}, ///V[5]
-        {-5.0f,  -3.0f,  0}, ///V[6]
-        {-5.0f,  3.0f, 0}, ///V[7]
-    };
-
-    triangle t[10] = {{v[0], v[1], v[3]},
-        {v[3], v[2], v[0]},
-        {v[1], v[4], v[5]},
-        {v[5], v[3], v[1]},
-        {v[6], v[7], v[2]},
-        {v[2], v[0], v[6]},
-        {v[6], v[4], v[1]},
-        {v[1], v[0], v[6]}
-    };
-
-    for(int numT = 0; numT < 8; numT++)
-    {
-
-        if(!isEndGame)
-            setColor(0,1,0);
-        else
-            setColor(1,0,1);
-        glBegin(GL_TRIANGLES);
-        CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
-        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
-        for(int j = 0; j < 3; j++) // vertices do triangulo
-            glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
-        glEnd();
-    }
-
-    ///Parede Direita///
-    vertice vetorNormalP2;
-
-    vertice v2[8] =
-    {
-        {5.0f, -3.0f,  0.5f}, ///V[0]
-        {4.8f, -3.0f,  0.5f}, ///V[1]
-        {5.0f,  3.0f,  0.5f}, ///V[2]
-        {4.8f,  3.0f, 0.5f}, ///V[3]
-        {4.8f, -3.0f, 0}, ///V[4]
-        {4.8f, 3.0f, 0}, ///V[5]
-        {5.0f, -3.0f, 0}, ///V[6]
-        {5.0f, 3.0f, 0}, ///V[7]
-    };
-
-    triangle t2[10] = {{v2[0], v2[1], v2[3]},
-        {v2[0], v2[3], v2[2]},
-        {v2[4], v2[1], v2[3]},
-        {v2[4], v2[3], v2[5]},
-        {v2[0], v2[6], v2[7]},
-        {v2[7], v2[2], v2[0]},
-        {v2[4], v2[6], v2[0]},
-        {v2[0], v2[1], v2[4]}
-    };
-
-    for(int numT = 0; numT < 8; numT++)
-    {
-        if(!isEndGame)
-            setColor(0,1,0);
-        else
-            setColor(1,0,1);
-        glBegin(GL_TRIANGLES);
-        CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
-        glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
-        for(int j = 0; j < 3; j++) // vertices do triangulo
-            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
-        glEnd();
-    }
-
-    ///Parede cima
-
-    vertice vetorNormalP3;
-
-    vertice v3[10] =
-    {
-        {-4.8f, 2.8f, 0},///V[0]
-        {4.8f, 2.8f, 0}, ///V[1]
-        {4.8f, 2.8f, 0.5f}, ///V[2]
-        {-4.8f, 2.8f, 0.5f}, ///V[3]
-        {-4.8f, 3.0f, 0.5f}, ///V[4]
-        {4.8f, 3.0f, 0.5f}, ///V[5]
-        {-5.0f, 3.0f, 0}, ///V[6]
-        {5.0f, 3.0f, 0}, ///V[7]
-        {-5.0f, 3.0f, 0.5f}, ///V[8]
-        {5.0f, 3.0f, 0.5f}, ///V[9]
-    };
-
-    triangle t3[10] = {{v3[2], v3[1], v3[0]},
-        {v3[0], v3[3], v3[2]},
-        {v3[5], v3[2], v3[3]},
-        {v3[3], v3[4], v3[5]},
-        {v3[6], v3[7], v3[9]},
-        {v3[9], v3[8], v3[6]},
-    };
-
-    for(int numT = 0; numT < 6; numT++)
-    {
-
-        if(!isEndGame)
-            setColor(0,1,0);
-        else
-            setColor(1,0,1);
-        glBegin(GL_TRIANGLES);
-        CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
-        glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
-        for(int j = 0; j < 3; j++) // vertices do triangulo
-            glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
-        glEnd();
-    }
-}
 
 void desenharPause()
 {
@@ -555,11 +389,8 @@ void drawObject()
     }
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
-    /// Desenha paredes
-    drawParedes();
 
-    ///Desenha Player
-    drawPlayer();
+    drawBlocos();
 
     ///Desenha Bola
     drawBall();
@@ -722,14 +553,6 @@ void mouse(int button, int state, int x, int y)
             last_x = x;
             last_y = y;
         }
-        /*   if(button == 3) // Scroll up
-           {
-               zdist+=1.0f;
-           }
-           if(button == 4) // Scroll Down
-           {
-               zdist-=1.0f;
-           }*/
         if ( button == GLUT_LEFT_BUTTON && !shooted)
         {
             ballPositionY = playerPositonY + playerSizeY/2;
@@ -780,7 +603,6 @@ int main(int argc, char** argv)
     glutInitWindowSize (1000, 600);
     glutInitWindowPosition (100, 100);
     glutCreateWindow (argv[0]);
-    //glutFullScreen();
     init();
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
