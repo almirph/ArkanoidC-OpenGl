@@ -251,23 +251,21 @@ void init(void)
 
 void calculaVelocidadeBola(int angulo)
 {
-  /*  if(angulo < 0)
+    int anguloTratado = angulo > 0 ? angulo + 90 : (90 - fabs(angulo));
+
+    /*if(angulo < 0)
     {
         ballSpeedX = fabs(sin(angulo) * forcaBola);
     }
     else if(angulo > 0)
     {
         ballSpeedX = -fabs(sin(angulo) * forcaBola);
-    }
-    if (angulo == 0)
-    {
-        ballSpeedY = forcaBola;
-        ballSpeedX = 0;
-    }
-    else
-    {
-        ballSpeedY = fabs(cos(angulo) * forcaBola);
     }*/
+
+
+    ballSpeedX = anguloTratado >= 90 ? -(cos(90-anguloTratado) * forcaBola) : (cos(anguloTratado) * forcaBola);
+    ballSpeedY = fabs(sin(anguloTratado) * forcaBola);
+    cout<<"ballSpeedX: "<<ballSpeedX<<" ballSpeedY: "<<ballSpeedY<<endl;
 }
 
 
@@ -307,7 +305,6 @@ void drawSeta()
     glutSolidCone(arrowWidth, arrowSize,100,100);
     glPopMatrix();
     }
-
 }
 
 void desenharVidas() {
@@ -599,6 +596,7 @@ void mouse(int button, int state, int x, int y)
                 arrowAngle = 5;
             }
         }
+        cout<<"arrowAngle: "<<arrowAngle<<endl;
     }
 }
 
