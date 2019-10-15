@@ -10,6 +10,8 @@
 #include "Bloco.h"
 #include <vector>
 
+#define PI 3.14159265359
+
 using namespace std;
 
 ///Classes
@@ -251,21 +253,10 @@ void init(void)
 
 void calculaVelocidadeBola(int angulo)
 {
-    int anguloTratado = angulo > 0 ? angulo + 90 : (90 - fabs(angulo));
+    double anguloRadianos = ((angulo * PI)/180);
 
-    /*if(angulo < 0)
-    {
-        ballSpeedX = fabs(sin(angulo) * forcaBola);
-    }
-    else if(angulo > 0)
-    {
-        ballSpeedX = -fabs(sin(angulo) * forcaBola);
-    }*/
-
-
-    ballSpeedX = anguloTratado >= 90 ? -(cos(90-anguloTratado) * forcaBola) : (cos(anguloTratado) * forcaBola);
-    ballSpeedY = fabs(sin(anguloTratado) * forcaBola);
-    cout<<"ballSpeedX: "<<ballSpeedX<<" ballSpeedY: "<<ballSpeedY<<endl;
+    ballSpeedX = (angulo >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola);
+    ballSpeedY = fabs(cos(anguloRadianos) * forcaBola);
 }
 
 

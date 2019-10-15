@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1571180098 source:/ice/Downloads/ArkanoidC-OpenGl/src/main.cpp
+1571181276 source:/ice/Downloads/ArkanoidC-OpenGl/src/main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
