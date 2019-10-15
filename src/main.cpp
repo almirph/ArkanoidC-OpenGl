@@ -313,15 +313,24 @@ void drawSeta()
 void desenharVidas() {
     float auxPos = 0.1;
     for(int i=0; i<qntVidas; i++) {
-        glPushMatrix();
-            glTranslatef(auxPos -5, 2.9, 3);
-            setColor(1,0,0);
-            glutSolidSphere(ballSize/1.1,100,100);
-        glPopMatrix();
 
-        auxPos += 0.3;
+        if(isOrtho){
+            glPushMatrix();
+                glTranslatef(auxPos -5, 2.9, 0);
+                setColor(1,0,0);
+                glutSolidSphere(ballSize/1.1,100,100);
+            glPopMatrix();
+            auxPos += 0.3;
+        }
+        else {
+            glPushMatrix();
+                glTranslatef(auxPos -5, 2.9, 1.6);
+                setColor(1,0,0);
+                glutSolidSphere(ballSize/1.1,100,100);
+            glPopMatrix();
+            auxPos += 0.3;
+        }
     }
-
 }
 
 
@@ -401,9 +410,6 @@ void drawObject()
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
 
-    ///Desenha vidas
-    desenharVidas();
-
     ///Desenha Blcos
     drawBlocos();
 
@@ -434,12 +440,14 @@ void display(void)
 
     gluLookAt (0.0, 0.0, zdist, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-
     glPushMatrix();
     glRotatef( rotationY, 0.0, 1.0, 0.0 );
     glRotatef( rotationX, 1.0, 0.0, 0.0 );
     drawObject();
     glPopMatrix();
+
+    ///Desenha vidas
+    desenharVidas();
 
     glutSwapBuffers();
 }
