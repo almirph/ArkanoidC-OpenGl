@@ -499,7 +499,7 @@ void desenharPause()
     }
 }
 
-void drawCurva()
+void drawCurvaDireita(int anguloInicio, int anguloFinal)
 {
     vertice vetorNormal;
     float x = 0;
@@ -508,10 +508,6 @@ void drawCurva()
     float yAnterior = 0;
     float cosAngulo;
     float senAngulo;
-    float anguloInicio = 135;
-    float anguloFinal = 225;
-    //float anguloInicio = 90;
-    //float anguloFinal = 270;
     for(int i = anguloInicio; i < anguloFinal; i += 1)
     {
         cosAngulo = cos(((i * PI)/180));
@@ -520,11 +516,49 @@ void drawCurva()
         y = raioCurvaParede * PI * senAngulo;
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[4] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}};
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {4.8, 0, 0.5}};
             setColor(0,1,0);
             glBegin(GL_TRIANGLES);
-            triangle t[2] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}};
-            for(int k = 0; k < 2; k++)
+            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
+            for(int k = 0; k < 3; k++)
+            {
+                CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+                glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+                for(int j = 0; j < 3; j++) // vertices do triangulo
+                {
+                    glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
+                }
+            }
+            glEnd();
+        }
+        xAnterior = x;
+        yAnterior = y;
+    }
+}
+
+
+void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
+{
+    vertice vetorNormal;
+    float x = 0;
+    float y = 0;
+    float xAnterior = 0;
+    float yAnterior = 0;
+    float cosAngulo;
+    float senAngulo;
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+        x = (raioCurvaParede * PI  * cosAngulo) - 6;
+        y = raioCurvaParede * PI * senAngulo;
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
+            setColor(0,1,0);
+            glBegin(GL_TRIANGLES);
+            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
+            for(int k = 0; k < 3; k++)
             {
                 CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
                 glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
@@ -574,7 +608,9 @@ void drawObject()
     verificaColisaoBlocos();
 
     ///Desenha paredes
-    drawCurva();
+    drawCurvaDireita(135, 225);
+    drawCurvaEsquerda(315, 380);
+    drawCurvaEsquerda(0, 45);
     drawParedes();
 
     ///Desenha Blcos
