@@ -38,10 +38,11 @@ bool isOrtho = false;
 bool isFullScreen = false;
 bool isEndGame = false;
 float raioCurvaParede = 0.5;
+float raioPlayer = 0.28;
 
 ///Player
 float playerPositionX = 0;
-float playerPositonY = -2.90;
+float playerPositonY = -3.65;
 
 ///Bola
 float shooted = false;
@@ -165,6 +166,7 @@ void CalculaNormal(triangle t, vertice *vn)
 
 void verificaGameOver()
 {
+    cout<<ballPositionY<<endl;
     if (ballPositionY <= -2.9)
         shooted = false;
 }
@@ -270,7 +272,7 @@ void drawBall()
         glTranslatef(0, 0, 0.1);
         if(!shooted)
         {
-            glTranslatef(playerPositionX, playerPositonY, 0);
+            glTranslatef(playerPositionX, playerPositonY + 1, 0);
         }
         else
         {
@@ -293,7 +295,7 @@ void drawSeta()
     if(!isEndGame)
     {
         glPushMatrix();
-        glTranslatef(playerPositionX,playerPositonY,0.1);
+        glTranslatef(playerPositionX,playerPositonY+1,0.1);
         glRotatef(arrowAngle,0,0,1);
         glRotatef(-90, 1,0,0);
         setColor(1,0,0);
@@ -536,7 +538,6 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
     }
 }
 
-
 void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
 {
     vertice vetorNormal;
@@ -574,6 +575,74 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
     }
 }
 
+drawPlayer() {
+    int anguloInicio = 45;
+    int anguloFinal = 135;
+    vertice vetorNormal;
+    float x = 0;
+    float y = 0;
+    float xAnterior = 0;
+    float yAnterior = 0;
+    float cosAngulo;
+    float senAngulo;
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+        x = (raioPlayer * PI  * cosAngulo) + playerPositionX;
+        y = (raioPlayer * PI * senAngulo) + playerPositonY;
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y , 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5}, };
+            setColor(0,1,0);
+            glBegin(GL_TRIANGLES);
+            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
+            for(int k = 0; k < 3; k++)
+            {
+                CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+                glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+                for(int j = 0; j < 3; j++) // vertices do triangulo
+                {
+                    glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
+                }
+            }
+            glEnd();
+        }
+        xAnterior = x;
+        yAnterior = y;
+    }
+
+    ///Desenha parte de trás do jogador
+    float xInicial = ((cos((anguloInicio * PI)/180)) * raioPlayer * PI) + playerPositionX;
+    float xFinal = ((cos((anguloFinal * PI)/180)) * raioPlayer * PI) + playerPositionX;
+
+    vertice vetorNormalP;
+
+    vertice v2[4] =
+    {
+        {xInicial, -3.02f,  0}, ///V[0]
+        {xFinal, -3.02f,  0}, ///V[1]
+        {xFinal,  -3.02f,  0.5f}, ///V[2]
+        {xInicial,  -3.02f, 0.5f}, ///V[3]
+    };
+
+    triangle t2[2] = {{v2[0], v2[1], v2[3]},
+        {v2[1], v2[2], v2[3]},
+    };
+
+    for(int numT = 0; numT < 2; numT++)
+    {
+        setColor(0,1,0);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t2[numT], &vetorNormalP); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP.x, vetorNormalP.y,vetorNormalP.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
+        glEnd();
+    }
+
+}
+
 void drawObject()
 {
     vertice vetorNormal;
@@ -606,6 +675,9 @@ void drawObject()
     }
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
+
+    ///Desenha Jogador
+    drawPlayer();
 
     ///Desenha paredes
     drawCurvaDireita(135, 225);
@@ -785,7 +857,7 @@ void mouse(int button, int state, int x, int y)
         }
         if ( button == GLUT_LEFT_BUTTON && !shooted)
         {
-            ballPositionY = playerPositonY;
+            ballPositionY = playerPositonY + 1;
             ballPositionX = playerPositionX;
             calculaVelocidadeBola(arrowAngle);
             shooted = true;
@@ -815,11 +887,11 @@ void mousePassive(int x, int y)
     {
         if(x > 500 && playerPositionX < 4.18)
         {
-            playerPositionX += 0.1;
+            playerPositionX += 0.2;
         }
         else if(x < 500 && playerPositionX > -4.18)
         {
-            playerPositionX -= 0.1;
+            playerPositionX -= 0.2;
         }
     }
 }
