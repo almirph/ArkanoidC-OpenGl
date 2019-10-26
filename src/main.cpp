@@ -65,6 +65,9 @@ bool podeMovimentar = false;
 ///Blocos
 vector<Bloco*> vetorBlocos;
 
+///Pontos paredes curva - Direita
+vector<Ponto*> vetorPontosParedeDireita;
+
 /// Functions
 void preencheVetorBlocos()
 {
@@ -130,6 +133,26 @@ void verificaColisaoBlocos()
                 ballSpeedX = -ballSpeedX;
             }
         }
+    }
+}
+
+void verificaColisaoParedesPlanas()
+{
+    float ballX = ballPositionX;
+    float ballY = ballPositionY;
+
+    /// Colidiu com a parede à direita
+    if((ballX + ballSize) >= 4.8) {
+        ballSpeedX = -ballSpeedX;
+    }
+
+    /// Colidiu com a parede à esquerda
+    if((ballX - ballSize) <= -4.8) {
+        ballSpeedX = -ballSpeedX;
+    }
+
+    if((ballY + ballSize) >= (3-ballSize)) {
+        ballSpeedY = -ballSpeedY;
     }
 }
 
@@ -514,8 +537,10 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
     {
         cosAngulo = cos(((i * PI)/180));
         senAngulo = sin(((i * PI)/180));
+
         x = (raioCurvaParede * PI  * cosAngulo) + 6;
         y = raioCurvaParede * PI * senAngulo;
+
         if(xAnterior != 0 && yAnterior != 0)
         {
             vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {4.8, 0, 0.5}};
@@ -533,6 +558,16 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
             }
             glEnd();
         }
+
+        float paredeX = x;
+        float paredeY = y;
+
+        if((ballPositionX + ballSize) > paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+        {
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = -ballSpeedY;
+        }
+
         xAnterior = x;
         yAnterior = y;
     }
@@ -551,8 +586,19 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
     {
         cosAngulo = cos(((i * PI)/180));
         senAngulo = sin(((i * PI)/180));
+
         x = (raioCurvaParede * PI  * cosAngulo) - 6;
         y = raioCurvaParede * PI * senAngulo;
+
+        float paredeX = x;
+        float paredeY = y;
+
+        if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+        {
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = -ballSpeedY;
+        }
+
         if(xAnterior != 0 && yAnterior != 0)
         {
             vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
@@ -675,6 +721,7 @@ void drawObject()
     }
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
+    verificaColisaoParedesPlanas();
 
     ///Desenha Jogador
     drawPlayer();
@@ -790,6 +837,12 @@ void keyboard (unsigned char key, int x, int y)
         {
             delete vetorBlocos[i];
         }
+
+        for(int i=0; i< vetorPontosParedeDireita.size(); i++)
+        {
+            delete vetorPontosParedeDireita[i];
+        }
+
         exit(0);
         break;
     case 'p':

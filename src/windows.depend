@@ -91,3 +91,52 @@
 	<iostream>
 	"Ponto.h"
 
+1572113750 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.cpp
+	<iostream>
+	"Bloco.h"
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.h
+	<iostream>
+	"Ponto.h"
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
+	<iostream>
+
+1572120882 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<math.h>
+	"extras.h"
+	<iostream>
+	<time.h>
+	"Bloco.h"
+	<vector>
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glut.h
+	"freeglut_std.h"
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
+	<windows.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\extras.h
+
+1572113750 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.cpp
+	<iostream>
+	"Ponto.h"
+
