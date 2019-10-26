@@ -37,6 +37,7 @@ int qntVidas = 5;
 bool isOrtho = false;
 bool isFullScreen = false;
 bool isEndGame = false;
+float raioCurvaParede = 0.5;
 
 ///Player
 float playerPositionX = 0;
@@ -183,8 +184,9 @@ bool verificaEndGame()
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
-        if(vetorBlocos[i]->getExibe()){
-           return false;
+        if(vetorBlocos[i]->getExibe())
+        {
+            return false;
         }
     }
     return true;
@@ -262,64 +264,196 @@ void calculaVelocidadeBola(int angulo)
 
 void drawBall()
 {
-    if(!isEndGame) {
-    glPushMatrix();
-    glTranslatef(0, 0, 0.1);
-    if(!shooted)
+    if(!isEndGame)
     {
-        glTranslatef(playerPositionX, playerPositonY, 0);
-    }
-    else
-    {
-        if(!jogoPausado)
+        glPushMatrix();
+        glTranslatef(0, 0, 0.1);
+        if(!shooted)
         {
-            ballPositionX += ballSpeedX;
-            ballPositionY += ballSpeedY;
+            glTranslatef(playerPositionX, playerPositonY, 0);
         }
-        glTranslatef(ballPositionX, ballPositionY, 0);
-    }
-    setColor(1,0,0);
-    glutSolidSphere(ballSize,100,100);
-    glPopMatrix();
+        else
+        {
+            if(!jogoPausado)
+            {
+                ballPositionX += ballSpeedX;
+                ballPositionY += ballSpeedY;
+            }
+            glTranslatef(ballPositionX, ballPositionY, 0);
+        }
+        setColor(1,0,0);
+        glutSolidSphere(ballSize,100,100);
+        glPopMatrix();
     }
 
 }
 
 void drawSeta()
 {
-    if(!isEndGame) {
-    glPushMatrix();
-    glTranslatef(playerPositionX,playerPositonY,0.1);
-    glRotatef(arrowAngle,0,0,1);
-    glRotatef(-90, 1,0,0);
-    setColor(1,0,0);
-    glutSolidCone(arrowWidth, arrowSize,100,100);
-    glPopMatrix();
+    if(!isEndGame)
+    {
+        glPushMatrix();
+        glTranslatef(playerPositionX,playerPositonY,0.1);
+        glRotatef(arrowAngle,0,0,1);
+        glRotatef(-90, 1,0,0);
+        setColor(1,0,0);
+        glutSolidCone(arrowWidth, arrowSize,100,100);
+        glPopMatrix();
     }
 }
 
-void desenharVidas() {
+void desenharVidas()
+{
     float auxPos = 0.1;
-    for(int i=0; i<qntVidas; i++) {
+    for(int i=0; i<qntVidas; i++)
+    {
 
-        if(isOrtho){
+        if(isOrtho)
+        {
             glPushMatrix();
-                glTranslatef(auxPos -5, 2.9, 0);
-                setColor(1,0,0);
-                glutSolidSphere(ballSize/1.1,100,100);
+            glTranslatef(auxPos -5, 2.9, 0);
+            setColor(1,0,0);
+            glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
         }
-        else {
+        else
+        {
             glPushMatrix();
-                glTranslatef(auxPos -5, 2.9, 1.6);
-                setColor(1,0,0);
-                glutSolidSphere(ballSize/1.1,100,100);
+            glTranslatef(auxPos -5, 2.9, 1.6);
+            setColor(1,0,0);
+            glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
         }
     }
 }
+
+void drawParedes()
+{
+
+    drawBlocos();
+    ///Parede Esquerda///
+    vertice vetorNormal;
+
+    vertice v[8] =
+    {
+        {-5.0f, -3.0f,  0.5f}, ///V[0]
+        {-4.8f, -3.0f,  0.5f}, ///V[1]
+        {-5.0f,  3.0f,  0.5f}, ///V[2]
+        {-4.8f,  3.0f, 0.5f}, ///V[3]
+        {-4.8f, -3.0f, 0}, ///V[4]
+        {-4.8f, 3.0f, 0}, ///V[5]
+        {-5.0f,  -3.0f,  0}, ///V[6]
+        {-5.0f,  3.0f, 0}, ///V[7]
+    };
+
+    triangle t[10] = {{v[0], v[1], v[3]},
+        {v[3], v[2], v[0]},
+        {v[1], v[4], v[5]},
+        {v[5], v[3], v[1]},
+        {v[6], v[7], v[2]},
+        {v[2], v[0], v[6]},
+        {v[6], v[4], v[1]},
+        {v[1], v[0], v[6]}
+    };
+
+    for(int numT = 0; numT < 8; numT++)
+    {
+
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        glEnd();
+    }
+
+    ///Parede Direita///
+    vertice vetorNormalP2;
+
+    vertice v2[8] =
+    {
+        {5.0f, -3.0f,  0.5f}, ///V[0]
+        {4.8f, -3.0f,  0.5f}, ///V[1]
+        {5.0f,  3.0f,  0.5f}, ///V[2]
+        {4.8f,  3.0f, 0.5f}, ///V[3]
+        {4.8f, -3.0f, 0}, ///V[4]
+        {4.8f, 3.0f, 0}, ///V[5]
+        {5.0f, -3.0f, 0}, ///V[6]
+        {5.0f, 3.0f, 0}, ///V[7]
+    };
+
+    triangle t2[10] = {{v2[0], v2[1], v2[3]},
+        {v2[0], v2[3], v2[2]},
+        {v2[4], v2[1], v2[3]},
+        {v2[4], v2[3], v2[5]},
+        {v2[0], v2[6], v2[7]},
+        {v2[7], v2[2], v2[0]},
+        {v2[4], v2[6], v2[0]},
+        {v2[0], v2[1], v2[4]}
+    };
+
+    for(int numT = 0; numT < 8; numT++)
+    {
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
+        glEnd();
+    }
+
+    ///Parede cima
+
+    vertice vetorNormalP3;
+
+    vertice v3[10] =
+    {
+        {-4.8f, 2.8f, 0},///V[0]
+        {4.8f, 2.8f, 0}, ///V[1]
+        {4.8f, 2.8f, 0.5f}, ///V[2]
+        {-4.8f, 2.8f, 0.5f}, ///V[3]
+        {-4.8f, 3.0f, 0.5f}, ///V[4]
+        {4.8f, 3.0f, 0.5f}, ///V[5]
+        {-5.0f, 3.0f, 0}, ///V[6]
+        {5.0f, 3.0f, 0}, ///V[7]
+        {-5.0f, 3.0f, 0.5f}, ///V[8]
+        {5.0f, 3.0f, 0.5f}, ///V[9]
+    };
+
+    triangle t3[10] = {{v3[2], v3[1], v3[0]},
+        {v3[0], v3[3], v3[2]},
+        {v3[5], v3[2], v3[3]},
+        {v3[3], v3[4], v3[5]},
+        {v3[6], v3[7], v3[9]},
+        {v3[9], v3[8], v3[6]},
+    };
+
+    for(int numT = 0; numT < 6; numT++)
+    {
+
+        if(!isEndGame)
+            setColor(0,1,0);
+        else
+            setColor(1,0,1);
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
+        glEnd();
+    }
+}
+
 
 
 void desenharPause()
@@ -365,6 +499,47 @@ void desenharPause()
     }
 }
 
+void drawCurva()
+{
+    vertice vetorNormal;
+    float x = 0;
+    float y = 0;
+    float xAnterior = 0;
+    float yAnterior = 0;
+    float cosAngulo;
+    float senAngulo;
+    float anguloInicio = 135;
+    float anguloFinal = 225;
+    //float anguloInicio = 90;
+    //float anguloFinal = 270;
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+        x = (raioCurvaParede * PI  * cosAngulo) + 6;
+        y = raioCurvaParede * PI * senAngulo;
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[4] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}};
+            setColor(0,1,0);
+            glBegin(GL_TRIANGLES);
+            triangle t[2] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}};
+            for(int k = 0; k < 2; k++)
+            {
+                CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+                glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+                for(int j = 0; j < 3; j++) // vertices do triangulo
+                {
+                    glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
+                }
+            }
+            glEnd();
+        }
+        xAnterior = x;
+        yAnterior = y;
+    }
+}
+
 void drawObject()
 {
     vertice vetorNormal;
@@ -398,6 +573,10 @@ void drawObject()
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
 
+    ///Desenha paredes
+    drawCurva();
+    drawParedes();
+
     ///Desenha Blcos
     drawBlocos();
 
@@ -417,7 +596,8 @@ void drawObject()
 
 void display(void)
 {
-    if(!jogoPausado) {
+    if(!jogoPausado)
+    {
         glutWarpPointer( 500, 300 );
     }
 
@@ -516,7 +696,8 @@ void keyboard (unsigned char key, int x, int y)
     case ' ':
         jogoPausado = !jogoPausado;
 
-        if(!jogoPausado){
+        if(!jogoPausado)
+        {
             podeMovimentar = false;
         }
 
@@ -527,7 +708,8 @@ void keyboard (unsigned char key, int x, int y)
     case 'c':
 
         podeMovimentar = !podeMovimentar;
-        if(podeMovimentar){
+        if(podeMovimentar)
+        {
             jogoPausado = true;
         }
         break;
@@ -558,7 +740,8 @@ void specialKey(int key, int x, int y)
 
 void mouse(int button, int state, int x, int y)
 {
-    if(!jogoPausado){
+    if(!jogoPausado)
+    {
         if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
         {
             last_x = x;
@@ -587,7 +770,6 @@ void mouse(int button, int state, int x, int y)
                 arrowAngle = 5;
             }
         }
-        cout<<"arrowAngle: "<<arrowAngle<<endl;
     }
 }
 
