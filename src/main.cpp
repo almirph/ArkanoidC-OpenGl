@@ -68,6 +68,8 @@ vector<Bloco*> vetorBlocos;
 ///Pontos paredes curva - Direita
 vector<Ponto*> vetorPontosParedeDireita;
 
+int faseAtual = 1;
+
 /// Functions
 void preencheVetorBlocos()
 {
@@ -77,9 +79,9 @@ void preencheVetorBlocos()
     float yBase1  = 2.8;
     float xBase = -4.80f;
 
-    for(int i=0; i<3; i++)
+    for(int i=0; i<1; i++)
     {
-        for(int j=0; j<6; j++)
+        for(int j=0; j<1; j++)
         {
             Ponto p1;
             Ponto p2;
@@ -170,6 +172,7 @@ void verificaColisaoParedesPlanas()
         ballSpeedX = -ballSpeedX;
     }
 
+    /// Colide parede superior
     if((ballY + ballSize) >= (3-ballSize))
     {
         ballSpeedY = -ballSpeedY;
@@ -207,14 +210,7 @@ void CalculaNormal(triangle t, vertice *vn)
     vn->z /= len;
 }
 
-void verificaGameOver()
-{
-    cout<<ballPositionY<<endl;
-    if (ballPositionY <= -2.9)
-        shooted = false;
-}
-
-void reinicia()
+void reiniciaJogo()
 {
     shooted = false;
     int i = 0;
@@ -222,10 +218,31 @@ void reinicia()
     {
         vetorBlocos[i]->setExibe(true);
     }
+
+    qntVidas = 5;
+    faseAtual = 1;
+}
+
+void verificaGameOver()
+{
+    if (ballPositionY <= -2.9 && shooted)
+    {
+        if((qntVidas-1) >= 0)
+        {
+            qntVidas--;
+        }
+
+        shooted = false;
+        if(qntVidas == 0) {
+            faseAtual = 1;
+            reiniciaJogo();
+        }
+    }
 }
 
 bool verificaEndGame()
 {
+    cout<<"Fase: "<<faseAtual<<endl;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
@@ -234,14 +251,71 @@ bool verificaEndGame()
             return false;
         }
     }
+
+    if((faseAtual+1) <= 3 && shooted){
+        faseAtual++;
+        shooted = false;
+
+        for(int i=0; i < vetorBlocos.size(); i++) {
+            delete vetorBlocos[i];
+        }
+
+        for(int i=0; i<vetorBlocos.size(); i++){
+            vetorBlocos.pop_back();
+        }
+
+        preencheVetorBlocos();
+
+        return false;
+    }
+
     return true;
 }
 
 void drawBlocos()
 {
-    float ambient[3]   = {0.0, 0.355, 0.0};
+    float ambient[3]  = {0.0, 0.355, 0.0};
     float difusa[3] = {0.0, 0.4, 0.0};
     float especular[3] = {0.0, 1, 0.0};
+
+    if(faseAtual == 1){
+        ambient[0] = 0.5;
+        ambient[1] = 0.1;
+        ambient[2] = 0.4;
+
+        difusa[0] = 0.5;
+        difusa[1] = 0.1;
+        difusa[2] = 0.4;
+
+        especular[0] = 0.5;
+        especular[1] = 0.1;
+        especular[2] = 0.4;
+    }else if(faseAtual == 2){
+        ambient[0] = 0.18;
+        ambient[1] = 0.23;
+        ambient[2] = 0.55;
+
+        difusa[0] = 0.18;
+        difusa[1] = 0.23;
+        difusa[2] = 0.55;
+
+        especular[0] = 0.18;
+        especular[1] = 0.23;
+        especular[2] = 0.55;
+    }else {
+        ambient[0] = 0.651;
+        ambient[1] = 0.565;
+        ambient[2] = 0.651;
+
+        difusa[0] = 0.651;
+        difusa[1] = 0.565;
+        difusa[2] = 0.651;
+
+        especular[0] = 0.651;
+        especular[1] = 0.565;
+        especular[2] = 0.651;
+    }
+
     float brilho = 20.0;
     for(int i=0; i<vetorBlocos.size(); i++)
     {
@@ -805,6 +879,7 @@ void drawObject()
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
         glEnd();
     }
+
     isEndGame = verificaEndGame();
     verificaColisaoBlocos();
     verificaColisaoParedesPlanas();
@@ -956,7 +1031,7 @@ void keyboard (unsigned char key, int x, int y)
 
         break;
     case 'r':
-        reinicia();
+        reiniciaJogo();
         break;
     case 'c':
 
