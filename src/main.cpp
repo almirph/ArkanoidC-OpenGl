@@ -34,8 +34,9 @@ typedef struct
 object *objectList;
 
 glcWavefrontObject *objectManager = NULL;
-bool fullScreen = false;
 
+float obj1X = 2;
+float obj1Y = 2.5;
 int selected = 0;
 int selectedShading = SMOOTH_SHADING;
 int selectedRender = USE_MATERIAL;
@@ -259,7 +260,8 @@ void verificaGameOver()
         }
 
         shooted = false;
-        if(qntVidas == 0) {
+        if(qntVidas == 0)
+        {
             faseAtual = 1;
             reiniciaJogo();
         }
@@ -268,7 +270,6 @@ void verificaGameOver()
 
 bool verificaEndGame()
 {
-    cout<<"Fase: "<<faseAtual<<endl;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
@@ -278,15 +279,18 @@ bool verificaEndGame()
         }
     }
 
-    if((faseAtual+1) <= 3 && shooted){
+    if((faseAtual+1) <= 3 && shooted)
+    {
         faseAtual++;
         shooted = false;
 
-        for(int i=0; i < vetorBlocos.size(); i++) {
+        for(int i=0; i < vetorBlocos.size(); i++)
+        {
             delete vetorBlocos[i];
         }
 
-        for(int i=0; i<vetorBlocos.size(); i++){
+        for(int i=0; i<vetorBlocos.size(); i++)
+        {
             vetorBlocos.pop_back();
         }
 
@@ -304,7 +308,8 @@ void drawBlocos()
     float difusa[3] = {0.0, 0.4, 0.0};
     float especular[3] = {0.0, 1, 0.0};
 
-    if(faseAtual == 1){
+    if(faseAtual == 1)
+    {
         ambient[0] = 0.5;
         ambient[1] = 0.1;
         ambient[2] = 0.4;
@@ -316,7 +321,9 @@ void drawBlocos()
         especular[0] = 0.5;
         especular[1] = 0.1;
         especular[2] = 0.4;
-    }else if(faseAtual == 2){
+    }
+    else if(faseAtual == 2)
+    {
         ambient[0] = 0.18;
         ambient[1] = 0.23;
         ambient[2] = 0.55;
@@ -328,7 +335,9 @@ void drawBlocos()
         especular[0] = 0.18;
         especular[1] = 0.23;
         especular[2] = 0.55;
-    }else {
+    }
+    else
+    {
         ambient[0] = 0.651;
         ambient[1] = 0.565;
         ambient[2] = 0.651;
@@ -345,7 +354,6 @@ void drawBlocos()
     float brilho = 20.0;
     for(int i=0; i<vetorBlocos.size(); i++)
     {
-
 
         /// Se o bloco puder ser exibido, então exibimos (óbvio)
         if(vetorBlocos[i]->getExibe())
@@ -421,12 +429,14 @@ void init(void)
     objectManager->SetNumberOfObjects(NUM_OBJECTS);
     for(int i = 0; i < NUM_OBJECTS; i++)
     {
+
         objectManager->SelectObject(i);
         objectManager->ReadObject(objectFiles[i]);
         objectManager->Unitize();
         objectManager->FacetNormal();
         objectManager->VertexNormals(90.0);
-        objectManager->Scale(5);
+        objectManager->Draw();
+
     }
 }
 
@@ -970,11 +980,15 @@ void display(void)
     glPopMatrix();
 
     ///Object manager
+    glPushMatrix();
     objectManager->SelectObject(selected);
     objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
     objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
     objectManager->Unitize();
+    objectManager->Scale(0.3);
+    glTranslatef(obj1X, obj1Y,-3);
     objectManager->Draw();
+    glPopMatrix();
 
     ///Desenha vidas
     desenharVidas();
