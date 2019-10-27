@@ -12,7 +12,33 @@
 
 #define PI 3.14159265359
 
+#include "glcWavefrontObject.h"
+
+#define NUM_OBJECTS 2
+
 using namespace std;
+
+
+char objectFiles[NUM_OBJECTS][50] =
+{
+    "../data/obj/ball.obj",
+    "../data/obj/al.obj",
+};
+
+typedef struct
+{
+    //GLMmodel* pmodel = NULL;
+    glcWavefrontObject *pmodel = NULL;
+} object;
+
+object *objectList;
+
+glcWavefrontObject *objectManager = NULL;
+bool fullScreen = false;
+
+int selected = 0;
+int selectedShading = SMOOTH_SHADING;
+int selectedRender = USE_MATERIAL;
 
 ///Classes
 class vertice
@@ -389,6 +415,19 @@ void init(void)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, cor_luz);
     glLightfv(GL_LIGHT0, GL_SPECULAR, cor_luz);
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
+
+    // LOAD OBJECTS
+    objectManager = new glcWavefrontObject();
+    objectManager->SetNumberOfObjects(NUM_OBJECTS);
+    for(int i = 0; i < NUM_OBJECTS; i++)
+    {
+        objectManager->SelectObject(i);
+        objectManager->ReadObject(objectFiles[i]);
+        objectManager->Unitize();
+        objectManager->FacetNormal();
+        objectManager->VertexNormals(90.0);
+        objectManager->Scale(5);
+    }
 }
 
 void calculaVelocidadeBola(int angulo)
@@ -929,6 +968,13 @@ void display(void)
     glRotatef( rotationX, 1.0, 0.0, 0.0 );
     drawObject();
     glPopMatrix();
+
+    ///Object manager
+    objectManager->SelectObject(selected);
+    objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
+    objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+    objectManager->Unitize();
+    objectManager->Draw();
 
     ///Desenha vidas
     desenharVidas();
