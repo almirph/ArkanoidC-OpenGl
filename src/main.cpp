@@ -407,7 +407,6 @@ void desenharVidas()
 
 void drawParedes()
 {
-    glPushMatrix();
     float ambient[3]   = {0.255, 0, 0.255};
     float difusa[3] = {0.255, 0, 0.255};
     float especular[3] = {0.255, 0, 0.255};
@@ -429,14 +428,14 @@ void drawParedes()
         {-5.0f,  3.0f, 0}, ///V[7]
     };
 
-    triangle t[10] = {{v[0], v[1], v[3]},
-        {v[3], v[2], v[0]},
-        {v[1], v[4], v[5]},
+    triangle t[10] = {{v[1], v[0], v[2]},
+        {v[2], v[3], v[1]},
+        {v[6], v[4], v[0]},
+        {v[4], v[1], v[0]},
+        {v[4], v[5], v[1]},
         {v[5], v[3], v[1]},
-        {v[6], v[7], v[2]},
-        {v[2], v[0], v[6]},
-        {v[6], v[4], v[1]},
-        {v[1], v[0], v[6]}
+        {v[6], v[7], v[0]},
+        {v[7], v[2], v[0]}
     };
 
     for(int numT = 0; numT < 8; numT++)
@@ -453,9 +452,7 @@ void drawParedes()
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
         glEnd();
     }
-    glPopMatrix();
     ///Parede Direita///
-    glPushMatrix();
     vertice vetorNormalP2;
 
     vertice v2[8] =
@@ -493,9 +490,7 @@ void drawParedes()
             glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
         glEnd();
     }
-    glPopMatrix();
     ///Parede cima
-    glPushMatrix();
     vertice vetorNormalP3;
 
     vertice v3[10] =
@@ -522,7 +517,6 @@ void drawParedes()
 
     for(int numT = 0; numT < 6; numT++)
     {
-
         if(!isEndGame)
             setMaterial(brilho, ambient, difusa,especular );
         else
@@ -534,7 +528,6 @@ void drawParedes()
             glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
         glEnd();
     }
-    glPopMatrix();
 }
 
 
@@ -750,8 +743,8 @@ drawPlayer()
         {xInicial,  -3.02f, 0.5f}, ///V[3]
     };
 
-    triangle t2[2] = {{v2[0], v2[1], v2[3]},
-        {v2[1], v2[2], v2[3]},
+    triangle t2[2] = {{v2[1], v2[0], v2[3]},
+        {v2[3], v2[2], v2[1]},
     };
 
     for(int numT = 0; numT < 2; numT++)
@@ -769,9 +762,9 @@ drawPlayer()
 
 void drawObject()
 {
-    float ambient[3]   = {0, 0, 1};
-    float difusa[3] = {0, 0, 1};
-    float especular[3] = {0, 0, 1};
+    float ambient[3]   = {0.1, 0, 0.7};
+    float difusa[3] = {0, 0, 0.1};
+    float especular[3] = {0, 0.1, 1};
     float brilho = 90.0;
     vertice vetorNormal;
 
@@ -862,6 +855,9 @@ void idle ()
     glutPostRedisplay();
 }
 
+
+
+
 // Motion callback
 void motion(int x, int y )
 {
@@ -872,8 +868,9 @@ void motion(int x, int y )
 
         last_x = x; //452 205
         last_y = y;
-        //rotationX = -53;
-        //rotationY = 0;
+
+        GLfloat posicao_luz[] = { rotationX, rotationY, 1.0, 1.0};
+        glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
     }
     else if(isOrtho)
     {
@@ -883,6 +880,8 @@ void motion(int x, int y )
         last_x = 0;
         last_y = 0;
 
+        GLfloat posicao_luz[] = { 0, 0, 6.0, 1.0};
+        glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
     }
 }
 
