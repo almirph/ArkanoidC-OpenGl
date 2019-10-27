@@ -656,15 +656,6 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
         x = (raioCurvaParede * PI  * cosAngulo) - 6;
         y = raioCurvaParede * PI * senAngulo;
 
-        float paredeX = x;
-        float paredeY = y;
-
-        if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
-        {
-            ballSpeedX = -ballSpeedX;
-            ballSpeedY = -ballSpeedY;
-        }
-
         if(xAnterior != 0 && yAnterior != 0)
         {
             vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
@@ -682,6 +673,16 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
             }
             glEnd();
         }
+
+        float paredeX = x;
+        float paredeY = y;
+
+        if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+        {
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = -ballSpeedY;
+        }
+
         xAnterior = x;
         yAnterior = y;
     }
@@ -725,6 +726,16 @@ drawPlayer()
             }
             glEnd();
         }
+
+        float paredeX = x;
+        float paredeY = y;
+
+        if((ballPositionY - ballSize) < paredeY && ballPositionX >= (paredeX-0.008) && ballPositionX <= (paredeX+0.008))
+        {
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = -ballSpeedY;
+        }
+
         xAnterior = x;
         yAnterior = y;
     }
