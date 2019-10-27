@@ -38,6 +38,8 @@
 			<Add library="libglew32.dll.a" />
 			<Add directory="../shared/windows/lib" />
 		</Linker>
+		<Unit filename="../shared/glcWavefrontObject.cpp" />
+		<Unit filename="../shared/glcWavefrontObject.h" />
 		<Unit filename="Bloco.h" />
 		<Unit filename="Ponto.h" />
 		<Unit filename="bloco.cpp" />
