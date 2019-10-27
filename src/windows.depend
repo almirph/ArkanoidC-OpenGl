@@ -42,20 +42,20 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1569175640 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
+1572212199 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
 	<stdio.h>
 	<ctype.h>
 	<math.h>
-	"extras.h"
 	<iostream>
 	<time.h>
 	"Bloco.h"
 	<vector>
+	"glcWavefrontObject.h"
 
-1272402996 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glew.h
+1572040726 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glew.h
 	<stddef.h>
 	<inttypes.h>
 	<stdint.h>
@@ -63,10 +63,10 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1368290960 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glut.h
+1572040726 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glut.h
 	"freeglut_std.h"
 
-1368290960 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
+1572040726 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
 	<windows.h>
 	<OpenGL/gl.h>
 	<OpenGL/glu.h>
@@ -76,18 +76,18 @@
 
 1566924478 c:\users\stardust\desktop\arkanoidc-opengl\src\extras.h
 
-1569089315 source:c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.cpp
+1572204248 source:c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.cpp
 	<iostream>
 	"Bloco.h"
 
-1569089315 c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.h
+1572204248 c:\users\stardust\desktop\arkanoidc-opengl\src\bloco.h
 	<iostream>
 	"Ponto.h"
 
-1569089315 c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.h
+1572204248 c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.h
 	<iostream>
 
-1569089315 source:c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.cpp
+1572204248 source:c:\users\stardust\desktop\arkanoidc-opengl\src\ponto.cpp
 	<iostream>
 	"Ponto.h"
 
@@ -138,4 +138,17 @@
 1572113750 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.cpp
 	<iostream>
 	"Ponto.h"
+
+1535591435 source:c:\users\stardust\desktop\arkanoidc-opengl\shared\glcwavefrontobject.cpp
+	"glcWavefrontObject.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+
+1535591437 c:\users\stardust\desktop\arkanoidc-opengl\shared\glcwavefrontobject.h
+	<math.h>
+	<stdio.h>
+	<GL/gl.h>
 
