@@ -102,7 +102,7 @@
 1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
 	<iostream>
 
-1572205387 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
+1572217643 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -113,6 +113,7 @@
 	<time.h>
 	"Bloco.h"
 	<vector>
+	"glcWavefrontObject.h"
 
 1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glew.h
 	<stddef.h>
@@ -148,6 +149,19 @@
 	<assert.h>
 
 1535591437 c:\users\stardust\desktop\arkanoidc-opengl\shared\glcwavefrontobject.h
+	<math.h>
+	<stdio.h>
+	<GL/gl.h>
+
+1572209917 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.cpp
+	"glcWavefrontObject.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+
+1572209917 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.h
 	<math.h>
 	<stdio.h>
 	<GL/gl.h>

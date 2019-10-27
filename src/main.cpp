@@ -95,50 +95,137 @@ vector<Bloco*> vetorBlocos;
 ///Pontos paredes curva - Direita
 vector<Ponto*> vetorPontosParedeDireita;
 
-int faseAtual = 1;
+int faseAtual = 3;
 
 /// Functions
 void preencheVetorBlocos()
 {
-    float espacamento = 0.2f;
-    float tamX = 1.361f;
-    float tamY = 0.5f;
-    float yBase1  = 2.8;
-    float xBase = -4.80f;
+    if(faseAtual == 1){
+        float espacamento = 0.4f;
+        float tamX = 2.721f;
+        float tamY = 1;
+        float yBase1  = 2.8;
+        float xBase = -4.80f;
 
-    for(int i=0; i<1; i++)
-    {
-        for(int j=0; j<1; j++)
+        for(int i=0; i<2; i++)
         {
-            Ponto p1;
-            Ponto p2;
-            Ponto p3;
-            Ponto p4;
+            for(int j=0; j<3; j++)
+            {
+                Ponto p1;
+                Ponto p2;
+                Ponto p3;
+                Ponto p4;
 
-            p1.setX(xBase + espacamento + tamX);
-            p1.setY(yBase1 - espacamento);
+                p1.setX(xBase + espacamento + tamX);
+                p1.setY(yBase1 - espacamento);
 
-            p2.setX(xBase + espacamento + tamX);
-            p2.setY(yBase1 - espacamento - tamY);
+                p2.setX(xBase + espacamento + tamX);
+                p2.setY(yBase1 - espacamento - tamY);
 
-            p3.setX(xBase + espacamento);
-            p3.setY(yBase1 - espacamento - tamY);
+                p3.setX(xBase + espacamento);
+                p3.setY(yBase1 - espacamento - tamY);
 
-            p4.setX(xBase + espacamento);
-            p4.setY(yBase1 - espacamento);
+                p4.setX(xBase + espacamento);
+                p4.setY(yBase1 - espacamento);
 
-            Bloco * b1 = new Bloco();
+                Bloco * b1 = new Bloco();
 
-            b1->setP1(p1);
-            b1->setP2(p2);
-            b1->setP3(p3);
-            b1->setP4(p4);
+                b1->setP1(p1);
+                b1->setP2(p2);
+                b1->setP3(p3);
+                b1->setP4(p4);
 
-            vetorBlocos.push_back(b1);
-            xBase += (espacamento + tamX);
+                vetorBlocos.push_back(b1);
+                xBase += (espacamento + tamX);
+            }
+            xBase = -4.80f;
+            yBase1 -= (espacamento + tamY);
         }
-        xBase = -4.80f;
-        yBase1 -= (espacamento + tamY);
+    }
+    else if(faseAtual == 2)
+    {
+        float espacamento = 0.2f;
+        float tamX = 1.361f;
+        float tamY = 0.5f;
+        float yBase1  = 2.8;
+        float xBase = -4.80f;
+
+        for(int i=0; i<2; i++)
+        {
+            for(int j=0; j<6; j++)
+            {
+                Ponto p1;
+                Ponto p2;
+                Ponto p3;
+                Ponto p4;
+
+                p1.setX(xBase + espacamento + tamX);
+                p1.setY(yBase1 - espacamento);
+
+                p2.setX(xBase + espacamento + tamX);
+                p2.setY(yBase1 - espacamento - tamY);
+
+                p3.setX(xBase + espacamento);
+                p3.setY(yBase1 - espacamento - tamY);
+
+                p4.setX(xBase + espacamento);
+                p4.setY(yBase1 - espacamento);
+
+                Bloco * b1 = new Bloco();
+
+                b1->setP1(p1);
+                b1->setP2(p2);
+                b1->setP3(p3);
+                b1->setP4(p4);
+
+                vetorBlocos.push_back(b1);
+                xBase += (espacamento + tamX);
+            }
+            xBase = -4.80f;
+            yBase1 -= (espacamento + tamY);
+        }
+    }
+    else if(faseAtual == 3){
+        float espacamento = 0.2f;
+        float tamX = 1.361f;
+        float tamY = 0.5f;
+        float yBase1  = 2.8;
+        float xBase = -4.80f;
+
+        for(int i=0; i<3; i++)
+        {
+            for(int j=0; j<6; j++)
+            {
+                Ponto p1;
+                Ponto p2;
+                Ponto p3;
+                Ponto p4;
+
+                p1.setX(xBase + espacamento + tamX);
+                p1.setY(yBase1 - espacamento);
+
+                p2.setX(xBase + espacamento + tamX);
+                p2.setY(yBase1 - espacamento - tamY);
+
+                p3.setX(xBase + espacamento);
+                p3.setY(yBase1 - espacamento - tamY);
+
+                p4.setX(xBase + espacamento);
+                p4.setY(yBase1 - espacamento);
+
+                Bloco * b1 = new Bloco();
+
+                b1->setP1(p1);
+                b1->setP2(p2);
+                b1->setP3(p3);
+                b1->setP4(p4);
+
+                vetorBlocos.push_back(b1);
+                xBase += (espacamento + tamX);
+            }
+            xBase = -4.80f;
+            yBase1 -= (espacamento + tamY);
+        }
     }
 }
 
