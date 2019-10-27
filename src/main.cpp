@@ -95,7 +95,7 @@ vector<Bloco*> vetorBlocos;
 ///Pontos paredes curva - Direita
 vector<Ponto*> vetorPontosParedeDireita;
 
-int faseAtual = 3;
+int faseAtual = 1;
 
 /// Functions
 void preencheVetorBlocos()
