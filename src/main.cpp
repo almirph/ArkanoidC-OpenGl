@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
-#include "extras.h"
+
 #include <iostream>
 #include <time.h>
 #include "Bloco.h"
@@ -113,6 +113,23 @@ void preencheVetorBlocos()
     }
 }
 
+void setMaterial(float brilho, float ambiente[], float difusa[], float especular[])
+{
+    GLfloat object_emissao[] =   { 0.0, 0.0, 0.0, 0.0 };
+    // Material do objeto (neste caso, ruby). Parametros em RGBA
+    GLfloat objeto_ambient[]   = { ambiente[0], ambiente[1], ambiente[2], 1.0 };
+    GLfloat objeto_difusa[]    = { difusa[0], difusa[1], difusa[2], 1.0 };
+    GLfloat objeto_especular[] = { especular[0], especular[1], especular[2], 1.0 };
+    glMaterialfv(GL_FRONT, GL_EMISSION, object_emissao);
+    GLfloat objeto_brilho[]    = { brilho };
+
+    // Define os parametros da superficie a ser iluminada
+    glMaterialfv(GL_FRONT, GL_AMBIENT, objeto_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, objeto_difusa);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, objeto_especular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, objeto_brilho);
+}
+
 void verificaColisaoBlocos()
 {
     float ballX = ballPositionX + ballSize;
@@ -142,16 +159,19 @@ void verificaColisaoParedesPlanas()
     float ballY = ballPositionY;
 
     /// Colidiu com a parede à direita
-    if((ballX + ballSize) >= 4.8) {
+    if((ballX + ballSize) >= 4.8)
+    {
         ballSpeedX = -ballSpeedX;
     }
 
     /// Colidiu com a parede à esquerda
-    if((ballX - ballSize) <= -4.8) {
+    if((ballX - ballSize) <= -4.8)
+    {
         ballSpeedX = -ballSpeedX;
     }
 
-    if((ballY + ballSize) >= (3-ballSize)) {
+    if((ballY + ballSize) >= (3-ballSize))
+    {
         ballSpeedY = -ballSpeedY;
     }
 }
@@ -219,6 +239,10 @@ bool verificaEndGame()
 
 void drawBlocos()
 {
+    float ambient[3]   = {0.0, 0.355, 0.0};
+    float difusa[3] = {0.0, 0.4, 0.0};
+    float especular[3] = {0.0, 1, 0.0};
+    float brilho = 20.0;
     for(int i=0; i<vetorBlocos.size(); i++)
     {
 
@@ -260,7 +284,7 @@ void drawBlocos()
             for(int numT = 0; numT < 12; numT++)
             {
 
-                setColor(0,1,1);
+                setMaterial(brilho, ambient, difusa,especular );
                 glBegin(GL_TRIANGLES);
                 CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
                 glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
@@ -275,7 +299,22 @@ void drawBlocos()
 
 void init(void)
 {
-    initLight(width, height); // Função extra para tratar iluminação.
+    glClearColor (0.0, 0.0, 0.0, 0.0);
+    glShadeModel (GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);               // Habilita Z-buffer
+    glEnable(GL_LIGHTING);                 // Habilita luz
+    glEnable(GL_LIGHT0);                   // habilita luz 0
+
+    // Cor da fonte de luz (RGBA)
+    GLfloat cor_luz[]     = { 1.0, 1.0, 1.0, 1.0};
+    // Posicao da fonte de luz. Ultimo parametro define se a luz sera direcional (0.0) ou tera uma posicional (1.0)
+    GLfloat posicao_luz[] = { 0, -5, 1.0, 1.0};
+
+    // Define parametros da luz
+    glLightfv(GL_LIGHT0, GL_AMBIENT, cor_luz);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, cor_luz);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, cor_luz);
+    glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
 }
 
 void calculaVelocidadeBola(int angulo)
@@ -289,6 +328,10 @@ void calculaVelocidadeBola(int angulo)
 
 void drawBall()
 {
+    float ambient[3]   = {0.255, 0, 0};
+    float difusa[3] = {0.255, 0, 0.};
+    float especular[3] = {0.255, 0, 0};
+    float brilho = 90.0;
     if(!isEndGame)
     {
         glPushMatrix();
@@ -306,7 +349,7 @@ void drawBall()
             }
             glTranslatef(ballPositionX, ballPositionY, 0);
         }
-        setColor(1,0,0);
+        setMaterial(brilho, ambient, difusa,especular );
         glutSolidSphere(ballSize,100,100);
         glPopMatrix();
     }
@@ -315,13 +358,17 @@ void drawBall()
 
 void drawSeta()
 {
+    float ambient[3]   = {0.255, 0, 0};
+    float difusa[3] = {0.255, 0, 0.};
+    float especular[3] = {0.255, 0, 0};
+    float brilho = 90.0;
     if(!isEndGame)
     {
         glPushMatrix();
         glTranslatef(playerPositionX,playerPositonY+1,0.1);
         glRotatef(arrowAngle,0,0,1);
         glRotatef(-90, 1,0,0);
-        setColor(1,0,0);
+        setMaterial(brilho, ambient, difusa,especular );
         glutSolidCone(arrowWidth, arrowSize,100,100);
         glPopMatrix();
     }
@@ -329,6 +376,10 @@ void drawSeta()
 
 void desenharVidas()
 {
+    float ambient[3]   = {0.255, 0, 0};
+    float difusa[3] = {0.255, 0, 0.};
+    float especular[3] = {0.255, 0, 0};
+    float brilho = 90.0;
     float auxPos = 0.1;
     for(int i=0; i<qntVidas; i++)
     {
@@ -337,7 +388,7 @@ void desenharVidas()
         {
             glPushMatrix();
             glTranslatef(auxPos -5, 2.9, 0);
-            setColor(1,0,0);
+            setMaterial(brilho, ambient, difusa,especular );
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
@@ -346,7 +397,7 @@ void desenharVidas()
         {
             glPushMatrix();
             glTranslatef(auxPos -5, 2.9, 1.6);
-            setColor(1,0,0);
+            //setColor(1,0,0);
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
@@ -356,6 +407,11 @@ void desenharVidas()
 
 void drawParedes()
 {
+    glPushMatrix();
+    float ambient[3]   = {0.255, 0, 0.255};
+    float difusa[3] = {0.255, 0, 0.255};
+    float especular[3] = {0.255, 0, 0.255};
+    float brilho = 90.0;
 
     drawBlocos();
     ///Parede Esquerda///
@@ -387,9 +443,9 @@ void drawParedes()
     {
 
         if(!isEndGame)
-            setColor(0,1,0);
+            setMaterial(brilho, ambient, difusa,especular );
         else
-            setColor(1,0,1);
+            setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
@@ -397,8 +453,9 @@ void drawParedes()
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
         glEnd();
     }
-
+    glPopMatrix();
     ///Parede Direita///
+    glPushMatrix();
     vertice vetorNormalP2;
 
     vertice v2[8] =
@@ -426,9 +483,9 @@ void drawParedes()
     for(int numT = 0; numT < 8; numT++)
     {
         if(!isEndGame)
-            setColor(0,1,0);
+            setMaterial(brilho, ambient, difusa,especular );
         else
-            setColor(1,0,1);
+            setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
@@ -436,9 +493,9 @@ void drawParedes()
             glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
         glEnd();
     }
-
+    glPopMatrix();
     ///Parede cima
-
+    glPushMatrix();
     vertice vetorNormalP3;
 
     vertice v3[10] =
@@ -467,9 +524,9 @@ void drawParedes()
     {
 
         if(!isEndGame)
-            setColor(0,1,0);
+            setMaterial(brilho, ambient, difusa,especular );
         else
-            setColor(1,0,1);
+            setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
@@ -477,12 +534,17 @@ void drawParedes()
             glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
         glEnd();
     }
+    glPopMatrix();
 }
 
 
 
 void desenharPause()
 {
+    float ambient[3]   = {0.255, 0, 0};
+    float difusa[3] = {0.255, 0, 0.};
+    float especular[3] = {0.255, 0, 0};
+    float brilho = 90.0;
     if(jogoPausado)
     {
         ///Parede cima
@@ -513,7 +575,7 @@ void desenharPause()
         for(int numT = 0; numT < 4; numT++)
         {
 
-            setColor(1,0,0);
+            setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
             CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
             glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
@@ -526,6 +588,12 @@ void desenharPause()
 
 void drawCurvaDireita(int anguloInicio, int anguloFinal)
 {
+
+    float ambient[3]   = {0.255, 0, 0.255};
+    float difusa[3] = {0.255, 0, 0.255};
+    float especular[3] = {0.255, 0, 0.255};
+    float brilho = 90.0;
+
     vertice vetorNormal;
     float x = 0;
     float y = 0;
@@ -544,7 +612,7 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
         if(xAnterior != 0 && yAnterior != 0)
         {
             vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {4.8, 0, 0.5}};
-            setColor(0,1,0);
+            setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
             triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
             for(int k = 0; k < 3; k++)
@@ -575,6 +643,11 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
 
 void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
 {
+    float ambient[3]   = {0.255, 0, 0.255};
+    float difusa[3] = {0.255, 0, 0.255};
+    float especular[3] = {0.255, 0, 0.255};
+    float brilho = 90.0;
+
     vertice vetorNormal;
     float x = 0;
     float y = 0;
@@ -602,7 +675,7 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
         if(xAnterior != 0 && yAnterior != 0)
         {
             vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
-            setColor(0,1,0);
+            setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
             triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
             for(int k = 0; k < 3; k++)
@@ -621,7 +694,12 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
     }
 }
 
-drawPlayer() {
+drawPlayer()
+{
+    float ambient[3]   = {.255, 0, 0};
+    float difusa[3] = {.255, 0, 0};
+    float especular[3] = {.255, 0, 0};
+    float brilho = 90.0;
     int anguloInicio = 45;
     int anguloFinal = 135;
     vertice vetorNormal;
@@ -639,8 +717,8 @@ drawPlayer() {
         y = (raioPlayer * PI * senAngulo) + playerPositonY;
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y , 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5}, };
-            setColor(0,1,0);
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5}, };
+            setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
             triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
             for(int k = 0; k < 3; k++)
@@ -678,7 +756,7 @@ drawPlayer() {
 
     for(int numT = 0; numT < 2; numT++)
     {
-        setColor(0,1,0);
+        setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t2[numT], &vetorNormalP); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP.x, vetorNormalP.y,vetorNormalP.z);
@@ -691,6 +769,10 @@ drawPlayer() {
 
 void drawObject()
 {
+    float ambient[3]   = {0, 0, 1};
+    float difusa[3] = {0, 0, 1};
+    float especular[3] = {0, 0, 1};
+    float brilho = 90.0;
     vertice vetorNormal;
 
     vertice v[8] =
@@ -702,16 +784,16 @@ void drawObject()
     };
 
 
-    triangle t[10] = {{v[0], v[1], v[2]},
-        {v[0], v[3], v[2]},
+    triangle t[10] = {{v[1], v[0], v[3]},
+        {v[3], v[2], v[1]},
     };
 
     for(int numT = 0; numT < 2; numT++)
     {
         if(!isEndGame)
-            setColor(0,0,139);
+            setMaterial(brilho, ambient, difusa,especular );
         else
-            setColor(1,0,1);
+            setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
