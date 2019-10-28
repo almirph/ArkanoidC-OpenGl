@@ -21,6 +21,10 @@ Bloco::Bloco(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
     this->p4->setY(p4.getY());
 
     this->exibe = true;
+
+    this->color1 = 1;
+    this->color2 = 0;
+    this->color3 = 0;
 }
 
 Bloco::Bloco(){

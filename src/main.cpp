@@ -103,7 +103,7 @@ void preencheVetorBlocos()
     if(faseAtual == 1)
     {
         float espacamento = 0.4f;
-        float tamX = 2.721f;
+        float tamX = 2.55f;
         float tamY = 1;
         float yBase1  = 2.8;
         float xBase = -4.80f;
@@ -532,7 +532,6 @@ void init(void)
         objectManager->FacetNormal();
         objectManager->VertexNormals(90.0);
         objectManager->Draw();
-
     }
 }
 

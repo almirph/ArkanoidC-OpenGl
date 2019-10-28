@@ -13,6 +13,7 @@ class Bloco {
         Ponto* p3;
         Ponto* p4;
         bool exibe;
+
     public:
         Bloco(Ponto p1, Ponto p2, Ponto p3, Ponto p4);
         Bloco();
@@ -27,6 +28,10 @@ class Bloco {
         void setP3(Ponto p3);
         void setP4(Ponto p4);
         void setExibe(bool exibe);
+
+        float color1;
+        float color2;
+        float color3;
 };
 
 

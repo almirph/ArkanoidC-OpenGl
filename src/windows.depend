@@ -91,18 +91,18 @@
 	<iostream>
 	"Ponto.h"
 
-1572113750 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.cpp
+1572303360 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.cpp
 	<iostream>
 	"Bloco.h"
 
-1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.h
+1572303327 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.h
 	<iostream>
 	"Ponto.h"
 
 1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
 	<iostream>
 
-1572220133 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
+1572303977 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
