@@ -78,7 +78,7 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.06;
+float forcaBola = 0.03;
 
 ///arrow
 float arrowSize = 0.9;
@@ -250,43 +250,31 @@ void setMaterial(float brilho, float ambiente[], float difusa[], float especular
 
 void verificaColisaoBlocos()
 {
-    float ballX = ballPositionX;
-    float ballY = ballPositionY;
+    float ballX = ballPositionX + ballSize/2;
+    float ballY = ballPositionY + ballSize/2;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
-        if(vetorBlocos[i]->getExibe()) {
-            /*
-            if((((ballY + ballSize) > (vetorBlocos[i]->getP3()->getY()-0.05)) && ((ballY + ballSize) < (vetorBlocos[i]->getP3()->getY())+0.05)) && ((ballX+ballSize) > v ) )  {
-                ballSpeedX = -ballSpeedX;
-            }
-
-            if() {
-
-            }
-
-            if() {
-
-            }
-
-            if() {
-
-            }*/
-        }
-
-        /*if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getX() <= ballX && vetorBlocos[i]->getP2()->getX() >= ballX  && vetorBlocos[i]->getP2()->getY() >= ballY && vetorBlocos[i]->getP2()->getY() - 0.05 <= ballY)
         {
             vetorBlocos[i]->setExibe(false);
-
-            if(ballX - 0.033 < vetorBlocos[i]->getP2()->getX() &&  ballX - 0.033 > vetorBlocos[i]->getP3()->getX())
-            {
-                ballSpeedY = -ballSpeedY;
-            }
-            if(ballY - 0.033 > vetorBlocos[i]->getP3()->getY() && ballY - 0.033 < vetorBlocos[i]->getP4()->getY())
-            {
-                ballSpeedX = -ballSpeedX;
-            }
-        }*/
+            ballSpeedY = -ballSpeedY;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP4()->getX() <= ballX && vetorBlocos[i]->getP1()->getX() >= ballX  && vetorBlocos[i]->getP4()->getY() >= ballY && vetorBlocos[i]->getP4()->getY() - 0.05 <= ballY)
+        {
+            vetorBlocos[i]->setExibe(false);
+            ballSpeedY = -ballSpeedY;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getY() <= ballY && vetorBlocos[i]->getP4()->getY() >= ballY  && vetorBlocos[i]->getP4()->getX() >= ballX && vetorBlocos[i]->getP2()->getX() - 0.05 <= ballX)
+        {
+            vetorBlocos[i]->setExibe(false);
+            ballSpeedX = -ballSpeedX;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP2()->getY() <= ballY && vetorBlocos[i]->getP1()->getY() >= ballY  && vetorBlocos[i]->getP2()->getX() >= ballX && vetorBlocos[i]->getP4()->getX() - 0.05 <= ballX)
+        {
+            vetorBlocos[i]->setExibe(false);
+            ballSpeedX = -ballSpeedX;
+        }
     }
 }
 
@@ -1291,11 +1279,11 @@ void mousePassive(int x, int y)
     {
         if(x > 500 && playerPositionX < 4.18)
         {
-            playerPositionX += 0.2;
+            playerPositionX += 0.15;
         }
         else if(x < 500 && playerPositionX > -4.18)
         {
-            playerPositionX -= 0.2;
+            playerPositionX -= 0.15;
         }
     }
 }
