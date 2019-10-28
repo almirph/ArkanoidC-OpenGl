@@ -100,7 +100,8 @@ int faseAtual = 1;
 /// Functions
 void preencheVetorBlocos()
 {
-    if(faseAtual == 1){
+    if(faseAtual == 1)
+    {
         float espacamento = 0.4f;
         float tamX = 2.721f;
         float tamY = 1;
@@ -185,7 +186,8 @@ void preencheVetorBlocos()
             yBase1 -= (espacamento + tamY);
         }
     }
-    else if(faseAtual == 3){
+    else if(faseAtual == 3)
+    {
         float espacamento = 0.2f;
         float tamX = 1.361f;
         float tamY = 0.5f;
@@ -533,6 +535,9 @@ void calculaVelocidadeBola(int angulo)
 
     ballSpeedX = (angulo >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola);
     ballSpeedY = fabs(cos(anguloRadianos) * forcaBola);
+
+    cout<<"ballSpeedX: "<<ballSpeedX<<endl;
+    cout<<"ballSpeedY: "<<ballSpeedY<<endl;
 }
 
 
@@ -827,16 +832,21 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
                     glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
                 }
             }
+
             glEnd();
-        }
 
-        float paredeX = x;
-        float paredeY = y;
+            float paredeX = x;
+            float paredeY = y;
 
-        if((ballPositionX + ballSize) > paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
-        {
-            ballSpeedX = -ballSpeedX;
-            ballSpeedY = -ballSpeedY;
+            if((ballPositionX + ballSize) > paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+            {
+                CalculaNormal(t[0], &vetorNormal);
+                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
+                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
+
+                ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2)))/10;
+                ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2)))/10;
+            }
         }
 
         xAnterior = x;
