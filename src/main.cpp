@@ -250,12 +250,31 @@ void setMaterial(float brilho, float ambiente[], float difusa[], float especular
 
 void verificaColisaoBlocos()
 {
-    float ballX = ballPositionX + ballSize;
-    float ballY = ballPositionY + ballSize;
+    float ballX = ballPositionX;
+    float ballY = ballPositionY;
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
-        if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
+        if(vetorBlocos[i]->getExibe()) {
+            /*
+            if((((ballY + ballSize) > (vetorBlocos[i]->getP3()->getY()-0.05)) && ((ballY + ballSize) < (vetorBlocos[i]->getP3()->getY())+0.05)) && ((ballX+ballSize) > v ) )  {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if() {
+
+            }
+
+            if() {
+
+            }
+
+            if() {
+
+            }*/
+        }
+
+        /*if(vetorBlocos[i]->getExibe() && ballX <= vetorBlocos[i]->getP2()->getX() && ballX >= vetorBlocos[i]->getP3()->getX() && ballY >= vetorBlocos[i]->getP3()->getY() && ballY <= vetorBlocos[i]->getP4()->getY())
         {
             vetorBlocos[i]->setExibe(false);
 
@@ -267,7 +286,7 @@ void verificaColisaoBlocos()
             {
                 ballSpeedX = -ballSpeedX;
             }
-        }
+        }*/
     }
 }
 
@@ -844,8 +863,8 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
                 cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
                 cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
 
-                ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2)))/10;
-                ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2)))/10;
+                ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+                ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
             }
         }
 
@@ -892,15 +911,19 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
                 }
             }
             glEnd();
-        }
 
-        float paredeX = x;
-        float paredeY = y;
+            float paredeX = x;
+            float paredeY = y;
 
-        if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
-        {
-            ballSpeedX = -ballSpeedX;
-            ballSpeedY = -ballSpeedY;
+            if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+            {
+                CalculaNormal(t[0], &vetorNormal);
+                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
+                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
+
+                ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+                ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+            }
         }
 
         xAnterior = x;
@@ -945,15 +968,19 @@ drawPlayer()
                 }
             }
             glEnd();
-        }
 
-        float paredeX = x;
-        float paredeY = y;
+            float paredeX = x;
+            float paredeY = y;
 
-        if((ballPositionY - ballSize) < paredeY && ballPositionX >= (paredeX-0.008) && ballPositionX <= (paredeX+0.008))
-        {
-            ballSpeedX = -ballSpeedX;
-            ballSpeedY = -ballSpeedY;
+            if((ballPositionY - ballSize) < paredeY && ballPositionX >= (paredeX-0.008) && ballPositionX <= (paredeX+0.008))
+            {
+                CalculaNormal(t[0], &vetorNormal);
+                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
+                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
+
+                ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+                ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+            }
         }
 
         xAnterior = x;
