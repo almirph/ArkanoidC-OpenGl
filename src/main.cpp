@@ -9,6 +9,8 @@
 #include <time.h>
 #include "Bloco.h"
 #include <vector>
+#include <time.h>
+#include "glcTexture.h"
 
 #define PI 3.14159265359
 
@@ -18,6 +20,9 @@
 
 using namespace std;
 
+
+///Texturas
+glcTexture *textureManager;
 
 char objectFiles[NUM_OBJECTS][50] =
 {
@@ -36,7 +41,11 @@ object *objectList;
 glcWavefrontObject *objectManager = NULL;
 
 float obj1X = 2;
-float obj1Y = 2.5;
+float obj1Y = 2.65;
+float velObj1X = 0;
+float velObj1Y = 0;
+bool exibirObjeto = false;
+float sizeBolaFutebol = 0.05f;
 int selected = 0;
 int selectedShading = SMOOTH_SHADING;
 int selectedRender = USE_MATERIAL;
@@ -66,6 +75,7 @@ bool isFullScreen = false;
 bool isEndGame = false;
 float raioCurvaParede = 0.5;
 float raioPlayer = 0.28;
+int timeObj1 = 0;
 
 ///Player
 float playerPositionX = 0;
@@ -78,7 +88,7 @@ float ballSpeedX = 0;
 float ballSpeedY = 0;
 float ballPositionX = 0;
 float ballPositionY = 0;
-float forcaBola = 0.03;
+float forcaBola = 0.06;
 
 ///arrow
 float arrowSize = 0.9;
@@ -98,8 +108,44 @@ vector<Ponto*> vetorPontosParedeDireita;
 int faseAtual = 1;
 
 /// Functions
+
+void velocidadeInicialObjetos()
+{
+    srand(time(NULL)); // randomize seed
+
+    int anguloAuxx = (rand() % 60) - 30;;
+    double anguloRadianos = ((anguloAuxx * PI)/180);
+
+    velObj1X = (anguloAuxx >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola);
+    velObj1Y = fabs(cos(anguloRadianos) * forcaBola);
+}
+
+void setInitialTime()
+{
+    velocidadeInicialObjetos();
+    srand(time(NULL));
+    timeObj1 = rand() % 1000;
+    if(timeObj1 % 2 == 0)
+    {
+        obj1X = -obj1X;
+    }
+}
+
+void atualizaTimer()
+{
+    if(timeObj1 > 0)
+    {
+        timeObj1--;
+    }
+    else
+    {
+        exibirObjeto = true;
+    }
+}
+
 void preencheVetorBlocos()
 {
+    vector<Bloco*> * vetorBlocosAux = new vector<Bloco*>;
     if(faseAtual == 1)
     {
         float espacamento = 0.4f;
@@ -136,7 +182,7 @@ void preencheVetorBlocos()
                 b1->setP3(p3);
                 b1->setP4(p4);
 
-                vetorBlocos.push_back(b1);
+                vetorBlocosAux->push_back(b1);
                 xBase += (espacamento + tamX);
             }
             xBase = -4.80f;
@@ -179,7 +225,7 @@ void preencheVetorBlocos()
                 b1->setP3(p3);
                 b1->setP4(p4);
 
-                vetorBlocos.push_back(b1);
+                vetorBlocosAux->push_back(b1);
                 xBase += (espacamento + tamX);
             }
             xBase = -4.80f;
@@ -222,13 +268,15 @@ void preencheVetorBlocos()
                 b1->setP3(p3);
                 b1->setP4(p4);
 
-                vetorBlocos.push_back(b1);
+                vetorBlocosAux->push_back(b1);
                 xBase += (espacamento + tamX);
             }
             xBase = -4.80f;
             yBase1 -= (espacamento + tamY);
         }
     }
+
+    vetorBlocos = *vetorBlocosAux;
 }
 
 void setMaterial(float brilho, float ambiente[], float difusa[], float especular[])
@@ -252,28 +300,50 @@ void verificaColisaoBlocos()
 {
     float ballX = ballPositionX + ballSize/2;
     float ballY = ballPositionY + ballSize/2;
+
+    float ball2X = obj1X + sizeBolaFutebol/2;
+    float ball2Y = obj1Y + sizeBolaFutebol/2;
+
     int i = 0;
     for (i = 0; i< vetorBlocos.size(); i++)
     {
-        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getX() <= ballX && vetorBlocos[i]->getP2()->getX() >= ballX  && vetorBlocos[i]->getP2()->getY() >= ballY && vetorBlocos[i]->getP2()->getY() - 0.05 <= ballY)
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getX() <= ballX && vetorBlocos[i]->getP2()->getX() >= ballX  && vetorBlocos[i]->getP2()->getY() >= ballY && vetorBlocos[i]->getP2()->getY() - 0.08 <= ballY)
         {
             vetorBlocos[i]->setExibe(false);
             ballSpeedY = -ballSpeedY;
         }
-        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP4()->getX() <= ballX && vetorBlocos[i]->getP1()->getX() >= ballX  && vetorBlocos[i]->getP4()->getY() >= ballY && vetorBlocos[i]->getP4()->getY() - 0.05 <= ballY)
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP4()->getX() <= ballX && vetorBlocos[i]->getP1()->getX() >= ballX  && vetorBlocos[i]->getP4()->getY() >= ballY && vetorBlocos[i]->getP4()->getY() - 0.08 <= ballY)
         {
             vetorBlocos[i]->setExibe(false);
             ballSpeedY = -ballSpeedY;
         }
-        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getY() <= ballY && vetorBlocos[i]->getP4()->getY() >= ballY  && vetorBlocos[i]->getP4()->getX() >= ballX && vetorBlocos[i]->getP2()->getX() - 0.05 <= ballX)
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getY() <= ballY && vetorBlocos[i]->getP4()->getY() >= ballY  && vetorBlocos[i]->getP4()->getX() >= ballX && vetorBlocos[i]->getP2()->getX() - 0.08 <= ballX)
         {
             vetorBlocos[i]->setExibe(false);
             ballSpeedX = -ballSpeedX;
         }
-        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP2()->getY() <= ballY && vetorBlocos[i]->getP1()->getY() >= ballY  && vetorBlocos[i]->getP2()->getX() >= ballX && vetorBlocos[i]->getP4()->getX() - 0.05 <= ballX)
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP2()->getY() <= ballY && vetorBlocos[i]->getP1()->getY() >= ballY  && vetorBlocos[i]->getP2()->getX() >= ballX && vetorBlocos[i]->getP4()->getX() - 0.08 <= ballX)
         {
             vetorBlocos[i]->setExibe(false);
             ballSpeedX = -ballSpeedX;
+        }
+
+
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getX() <= ball2X && vetorBlocos[i]->getP2()->getX() >= ball2X  && vetorBlocos[i]->getP2()->getY() >= ball2Y && vetorBlocos[i]->getP2()->getY() - 0.05 <= ball2Y)
+        {
+            velObj1Y = -velObj1Y;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP4()->getX() <= ball2X && vetorBlocos[i]->getP1()->getX() >= ball2X  && vetorBlocos[i]->getP4()->getY() >= ball2Y && vetorBlocos[i]->getP4()->getY() - 0.05 <= ball2Y)
+        {
+            velObj1Y = -velObj1Y;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP3()->getY() <= ball2Y && vetorBlocos[i]->getP4()->getY() >= ball2Y  && vetorBlocos[i]->getP4()->getX() >= ball2X && vetorBlocos[i]->getP2()->getX() - 0.05 <= ball2X)
+        {
+            velObj1X = -velObj1X;
+        }
+        if(vetorBlocos[i]->getExibe() && vetorBlocos[i]->getP2()->getY() <= ball2Y && vetorBlocos[i]->getP1()->getY() >= ball2Y  && vetorBlocos[i]->getP2()->getX() >= ball2X && vetorBlocos[i]->getP4()->getX() - 0.01 <= ball2X)
+        {
+            velObj1X = -velObj1X;
         }
     }
 }
@@ -299,6 +369,26 @@ void verificaColisaoParedesPlanas()
     if((ballY + ballSize) >= (3-ballSize))
     {
         ballSpeedY = -ballSpeedY;
+    }
+
+
+
+    /// Colidiu com a parede à direita - Bola futebol
+    if((obj1X + sizeBolaFutebol) >= 4.8)
+    {
+        velObj1X = -velObj1X;
+    }
+
+    /// Colidiu com a parede à esquerda - Bola futebol
+    if((obj1X - sizeBolaFutebol) <= -4.8)
+    {
+        velObj1X = -velObj1X;
+    }
+
+    /// Colide parede superior - Bola futebol
+    if((obj1Y + sizeBolaFutebol) >= (3-sizeBolaFutebol))
+    {
+        velObj1Y = -velObj1Y;
     }
 }
 
@@ -336,12 +426,11 @@ void CalculaNormal(triangle t, vertice *vn)
 void reiniciaJogo()
 {
     shooted = false;
-    int i = 0;
-    for (i = 0; i< vetorBlocos.size(); i++)
-    {
-        vetorBlocos[i]->setExibe(true);
-    }
-
+    preencheVetorBlocos();
+    velocidadeInicialObjetos();
+    exibirObjeto = true;
+    obj1X = 2;
+    obj1Y = 2.5;
     qntVidas = 5;
     faseAtual = 1;
 }
@@ -375,9 +464,29 @@ bool verificaEndGame()
         }
     }
 
-    if((faseAtual+1) <= 3 && shooted)
+    if((faseAtual+1) <= 3 && shooted && qntVidas > 0)
     {
         faseAtual++;
+        shooted = false;
+
+        for(int i=0; i < vetorBlocos.size(); i++)
+        {
+            delete vetorBlocos[i];
+        }
+
+        for(int i=0; i<vetorBlocos.size(); i++)
+        {
+            vetorBlocos.pop_back();
+        }
+
+        preencheVetorBlocos();
+
+        return false;
+    }
+
+    if(qntVidas == 0)
+    {
+        faseAtual = 1;
         shooted = false;
 
         for(int i=0; i < vetorBlocos.size(); i++)
@@ -500,6 +609,15 @@ void drawBlocos()
     }
 }
 
+void setTextures()
+{
+    textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
+    textureManager->SetNumberOfTextures(4);       // Estabelece o número de texturas que será utilizado
+    textureManager->CreateTexture("../data/ground.png", 0);
+    textureManager->CreateTexture("../data/parede-lado.png", 1);
+    textureManager->CreateTexture("../data/parede-curva.png", 2);
+    textureManager->CreateTexture("../data/parede-curva-cima.png", 3);
+}
 
 void init(void)
 {
@@ -533,6 +651,11 @@ void init(void)
         objectManager->VertexNormals(90.0);
         objectManager->Draw();
     }
+    setInitialTime();
+    velocidadeInicialObjetos();
+
+    ///Setar Texturas
+    setTextures();
 }
 
 void calculaVelocidadeBola(int angulo)
@@ -542,8 +665,6 @@ void calculaVelocidadeBola(int angulo)
     ballSpeedX = (angulo >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola);
     ballSpeedY = fabs(cos(anguloRadianos) * forcaBola);
 
-    cout<<"ballSpeedX: "<<ballSpeedX<<endl;
-    cout<<"ballSpeedY: "<<ballSpeedY<<endl;
 }
 
 
@@ -608,7 +729,7 @@ void desenharVidas()
         if(isOrtho)
         {
             glPushMatrix();
-            glTranslatef(auxPos -5, 2.9, 0);
+            glTranslatef(auxPos -4.8, 2.7, 1);
             setMaterial(brilho, ambient, difusa,especular );
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
@@ -618,7 +739,7 @@ void desenharVidas()
         {
             glPushMatrix();
             glTranslatef(auxPos -5, 2.9, 1.6);
-            //setColor(1,0,0);
+            setMaterial(brilho, ambient, difusa,especular );
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
@@ -628,12 +749,15 @@ void desenharVidas()
 
 void drawParedes()
 {
-    float ambient[3]   = {0.255, 0, 0.255};
-    float difusa[3] = {0.255, 0, 0.255};
-    float especular[3] = {0.255, 0, 0.255};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
 
+    textureManager->Bind(1);
+
     drawBlocos();
+
     ///Parede Esquerda///
     vertice vetorNormal;
 
@@ -670,7 +794,11 @@ void drawParedes()
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
         for(int j = 0; j < 3; j++) // vertices do triangulo
+        {
+            glTexCoord2f(t[numT].v[j].y, t[numT].v[j].z);
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        }
+
         glEnd();
     }
     ///Parede Direita///
@@ -707,8 +835,11 @@ void drawParedes()
         glBegin(GL_TRIANGLES);
         CalculaNormal(t2[numT], &vetorNormalP2); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP2.x, vetorNormalP2.y,vetorNormalP2.z);
-        for(int j = 0; j < 3; j++) // vertices do triangulo
+        for(int j = 0; j < 3; j++)// vertices do triangulo
+        {
+            glTexCoord2f(t2[numT].v[j].y, t2[numT].v[j].z);
             glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
+        }
         glEnd();
     }
     ///Parede cima
@@ -746,7 +877,11 @@ void drawParedes()
         CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
         for(int j = 0; j < 3; j++) // vertices do triangulo
+        {
+            glTexCoord2f(t3[numT].v[j].x, t3[numT].v[j].z);
             glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
+        }
+
         glEnd();
     }
 }
@@ -800,13 +935,103 @@ void desenharPause()
     }
 }
 
+
+drawBuracos()
+{
+    float ambient[3]   = {0.0, 0, 0.0};
+    float difusa[3] = {0.0, 0, 0.0};
+    float especular[3] = {0.0, 0, 0.0};
+    float brilho = 90.0;
+
+    vertice vetorNormalP3;
+
+    vertice v3[10] =
+    {
+        {-2.9f, 2.75f, 0},///V[0]
+        {-0.9, 2.75f, 0}, ///V[1]
+        {-0.9, 2.75f, 0.7f}, ///V[2]
+        {-2.9f, 2.75f, 0.7f}, ///V[3]
+        {-2.9f, 3.1f, 0.7f}, ///V[4]
+        {-0.9, 3.1f, 0.7f}, ///V[5]
+        {-3.1f, 3.1f, 0}, ///V[6]
+        {3.1f, 3.1f, 0}, ///V[7]
+        {-3.1f, 3.1f, 0.7f}, ///V[8]
+        {3.1f, 3.1f, 0.7f}, ///V[9]
+    };
+
+    triangle t3[10] = {{v3[2], v3[1], v3[0]},
+        {v3[0], v3[3], v3[2]},
+        {v3[5], v3[2], v3[3]},
+        {v3[3], v3[4], v3[5]},
+        {v3[6], v3[7], v3[9]},
+        {v3[9], v3[8], v3[6]},
+    };
+
+    for(int numT = 0; numT < 6; numT++)
+    {
+        if(!isEndGame)
+            setMaterial(brilho, ambient, difusa,especular );
+        else
+            setMaterial(brilho, ambient, difusa,especular );
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t3[numT], &vetorNormalP3); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP3.x, vetorNormalP3.y,vetorNormalP3.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t3[numT].v[j].x, t3[numT].v[j].y, t3[numT].v[j].z);
+        glEnd();
+    }
+
+    ///Buraco direito
+
+    vertice vetorNormalP4;
+
+    vertice v4[10] =
+    {
+        {2.9f, 2.75f, 0},///V[0]
+        {0.9, 2.75f, 0}, ///V[1]
+        {0.9, 2.75f, 0.7f}, ///V[2]
+        {2.9f, 2.75f, 0.7f}, ///V[3]
+        {2.9f, 3.1f, 0.7f}, ///V[4]
+        {0.9, 3.1f, 0.7f}, ///V[5]
+        {3.1f, 3.1f, 0}, ///V[6]
+        {-3.1f, 3.1f, 0}, ///V[7]
+        {3.1f, 3.1f, 0.7f}, ///V[8]
+        {-3.1f, 3.1f, 0.7f}, ///V[9]
+    };
+
+    triangle t4[10] = {{v4[2], v4[1], v4[0]},
+        {v4[0], v4[3], v4[2]},
+        {v4[5], v4[2], v4[3]},
+        {v4[3], v4[4], v4[5]},
+        {v4[6], v4[7], v4[9]},
+        {v4[9], v4[8], v4[6]},
+    };
+
+    for(int numT = 0; numT < 6; numT++)
+    {
+        if(!isEndGame)
+            setMaterial(brilho, ambient, difusa,especular );
+        else
+            setMaterial(brilho, ambient, difusa,especular );
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t4[numT], &vetorNormalP4); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormalP4.x, vetorNormalP4.y,vetorNormalP4.z);
+        for(int j = 0; j < 3; j++) // vertices do triangulo
+            glVertex3d(t4[numT].v[j].x, t4[numT].v[j].y, t4[numT].v[j].z);
+        glEnd();
+    }
+
+}
+
 void drawCurvaDireita(int anguloInicio, int anguloFinal)
 {
 
-    float ambient[3]   = {0.255, 0, 0.255};
-    float difusa[3] = {0.255, 0, 0.255};
-    float especular[3] = {0.255, 0, 0.255};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
+
+    textureManager->Bind(2);
 
     vertice vetorNormal;
     float x = 0;
@@ -815,6 +1040,7 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
     float yAnterior = 0;
     float cosAngulo;
     float senAngulo;
+
     for(int i = anguloInicio; i < anguloFinal; i += 1)
     {
         cosAngulo = cos(((i * PI)/180));
@@ -825,16 +1051,17 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
 
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {4.8, 0, 0.5}};
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}};
             setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
-            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
-            for(int k = 0; k < 3; k++)
+            triangle t[2] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}};
+            for(int k = 0; k < 2; k++)
             {
                 CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
                 glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
                 for(int j = 0; j < 3; j++) // vertices do triangulo
                 {
+                    glTexCoord2f(t[k].v[j].y, t[k].v[j].z);
                     glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
                 }
             }
@@ -844,28 +1071,79 @@ void drawCurvaDireita(int anguloInicio, int anguloFinal)
             float paredeX = x;
             float paredeY = y;
 
-            if((ballPositionX + ballSize) > paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+            if((ballPositionX + ballSize) > paredeX && ballPositionY >= (paredeY-0.08) && ballPositionY <= (paredeY+0.08))
             {
                 CalculaNormal(t[0], &vetorNormal);
-                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
-                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
-
                 ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
                 ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+            }
+
+            if((obj1X + sizeBolaFutebol) > paredeX && obj1Y >= (paredeY-0.08) && obj1Y <= (paredeY+0.08))
+            {
+                CalculaNormal(t[0], &vetorNormal);
+                velObj1X = ((vetorNormal.x + velObj1X)/sqrt(pow(vetorNormal.x + velObj1X,2) + pow(vetorNormal.y + velObj1Y, 2))) * forcaBola;
+                velObj1Y = ((vetorNormal.y + velObj1Y)/sqrt(pow(vetorNormal.x + velObj1X,2) + pow(vetorNormal.y + velObj1Y, 2))) * forcaBola;
             }
         }
 
         xAnterior = x;
         yAnterior = y;
     }
+
+    ///Desenha parte de cima
+
+    textureManager->Bind(3);
+
+    x = 0;
+    y = 0;
+    xAnterior = 0;
+    yAnterior = 0;
+    cosAngulo;
+    senAngulo;
+
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+
+        x = (raioCurvaParede * PI  * cosAngulo) + 6;
+        y = raioCurvaParede * PI * senAngulo;
+
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[3] = { {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {4.8, 0, 0.5}};
+            setMaterial(brilho, ambient, difusa,especular );
+            glBegin(GL_TRIANGLES);
+            triangle t[1] = {{v[2], v[0], v[1]}};
+
+            CalculaNormal(t[0], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+            glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+            for(int j = 0; j < 3; j++) // vertices do triangulo
+            {
+                glTexCoord2f(t[0].v[j].x, t[0].v[j].y);
+                glVertex3d(t[0].v[j].x, t[0].v[j].y, t[0].v[j].z);
+            }
+        }
+
+        glEnd();
+
+        xAnterior = x;
+        yAnterior = y;
+    }
+
+
 }
+
+
 
 void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
 {
-    float ambient[3]   = {0.255, 0, 0.255};
-    float difusa[3] = {0.255, 0, 0.255};
-    float especular[3] = {0.255, 0, 0.255};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
+
+    textureManager->Bind(2);
 
     vertice vetorNormal;
     float x = 0;
@@ -884,16 +1162,17 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
 
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
+            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}};
             setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
-            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
-            for(int k = 0; k < 3; k++)
+            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}};
+            for(int k = 0; k < 2; k++)
             {
                 CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
                 glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
                 for(int j = 0; j < 3; j++) // vertices do triangulo
                 {
+                    glTexCoord2f(t[k].v[j].y, t[k].v[j].z);
                     glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
                 }
             }
@@ -902,15 +1181,59 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
             float paredeX = x;
             float paredeY = y;
 
-            if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.008) && ballPositionY <= (paredeY+0.008))
+            if((ballPositionX - ballSize) < paredeX && ballPositionY >= (paredeY-0.08) && ballPositionY <= (paredeY+0.08))
             {
                 CalculaNormal(t[0], &vetorNormal);
-                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
-                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
 
                 ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
                 ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
             }
+
+            if((obj1X - ballSize) < paredeX && obj1Y >= (paredeY-0.08) && obj1Y <= (paredeY+0.08))
+            {
+                CalculaNormal(t[0], &vetorNormal);
+
+                velObj1X = ((vetorNormal.x + velObj1X)/sqrt(pow(vetorNormal.x + velObj1X,2) + pow(vetorNormal.y + velObj1Y, 2))) * forcaBola;
+                velObj1Y = ((vetorNormal.y + velObj1Y)/sqrt(pow(vetorNormal.x + velObj1X,2) + pow(vetorNormal.y + velObj1Y, 2))) * forcaBola;
+            }
+        }
+
+        xAnterior = x;
+        yAnterior = y;
+    }
+
+    ///Desenha parte de cima
+
+    textureManager->Bind(3);
+
+    x = 0;
+    y = 0;
+    xAnterior = 0;
+    yAnterior = 0;
+    cosAngulo;
+    senAngulo;
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+
+        x = (raioCurvaParede * PI  * cosAngulo) - 6;
+        y = raioCurvaParede * PI * senAngulo;
+
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[5] = {{x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {-4.8, 0, 0.5}};
+            setMaterial(brilho, ambient, difusa,especular );
+            glBegin(GL_TRIANGLES);
+            triangle t[1] = {{v[2], v[0], v[1]}};
+            CalculaNormal(t[0], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+            glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+            for(int j = 0; j < 3; j++) // vertices do triangulo
+            {
+                glTexCoord2f(t[0].v[j].x, t[0].v[j].y);
+                glVertex3d(t[0].v[j].x, t[0].v[j].y, t[0].v[j].z);
+            }
+            glEnd();
         }
 
         xAnterior = x;
@@ -959,14 +1282,18 @@ drawPlayer()
             float paredeX = x;
             float paredeY = y;
 
-            if((ballPositionY - ballSize) < paredeY && ballPositionX >= (paredeX-0.008) && ballPositionX <= (paredeX+0.008))
+            if((ballPositionY - ballSize) < paredeY && ballPositionX >= (paredeX-0.08) && ballPositionX <= (paredeX+0.08))
             {
                 CalculaNormal(t[0], &vetorNormal);
-                cout<<"vetorNormal.x: "<<vetorNormal.x<<endl;
-                cout<<"vetorNormal.y: "<<vetorNormal.y<<endl;
 
                 ballSpeedX = ((vetorNormal.x + ballSpeedX)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
                 ballSpeedY = ((vetorNormal.y + ballSpeedY)/sqrt(pow(vetorNormal.x + ballSpeedX,2) + pow(vetorNormal.y + ballSpeedY, 2))) * forcaBola;
+            }
+
+            if((obj1Y - sizeBolaFutebol) < paredeY && obj1X >= (paredeX-0.08) && obj1X <= (paredeX+0.08))
+            {
+                exibirObjeto = false;
+                setInitialTime();
             }
         }
 
@@ -1005,13 +1332,24 @@ drawPlayer()
 
 }
 
+void verificaColisaoFotebolVermelha()
+{
+    if(ballPositionX+ballSize >= obj1X && ballPositionX-ballSize <= obj1X && ballPositionY+ballSize >= obj1Y && ballPositionY-ballSize <= obj1Y)
+    {
+        exibirObjeto = false;
+        setInitialTime();
+    }
+}
+
 void drawObject()
 {
-    float ambient[3]   = {0.1, 0, 0.7};
-    float difusa[3] = {0, 0, 0.1};
-    float especular[3] = {0, 0.1, 1};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
     vertice vetorNormal;
+
+    textureManager->Bind(0);
 
     vertice v[8] =
     {
@@ -1035,8 +1373,11 @@ void drawObject()
         glBegin(GL_TRIANGLES);
         CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
-        for(int j = 0; j < 3; j++) // vertices do triangulo
+        for(int j = 0; j < 3; j++)  // vertices do triangulo
+        {
+            glTexCoord2f(t[numT].v[j].x, t[numT].v[j].y);
             glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+        }
         glEnd();
     }
 
@@ -1048,10 +1389,10 @@ void drawObject()
     drawPlayer();
 
     ///Desenha paredes
+    drawParedes();
     drawCurvaDireita(135, 225);
     drawCurvaEsquerda(315, 380);
     drawCurvaEsquerda(0, 45);
-    drawParedes();
 
     ///Desenha Blcos
     drawBlocos();
@@ -1068,6 +1409,37 @@ void drawObject()
     {
         drawSeta();
     }
+
+    ///
+    drawBuracos();
+
+    ///Object
+    glPushMatrix();
+    if(exibirObjeto)
+    {
+        obj1X -= velObj1X/2;
+        obj1Y -= velObj1Y/2;
+        objectManager->SelectObject(selected);
+        objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
+        objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+        objectManager->Unitize();
+        objectManager->Scale(0.12);
+        glTranslatef(obj1X, obj1Y, 0.03);
+        objectManager->Draw();
+        verificaColisaoFotebolVermelha();
+    }
+    else
+    {
+        atualizaTimer();
+        objectManager->SelectObject(selected);
+        objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
+        objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+        objectManager->Unitize();
+        objectManager->Scale(0.001);
+        objectManager->Draw();
+    }
+    glPopMatrix();
+
 }
 
 void display(void)
@@ -1090,21 +1462,12 @@ void display(void)
     drawObject();
     glPopMatrix();
 
-    ///Object manager
-    glPushMatrix();
-    objectManager->SelectObject(selected);
-    objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
-    objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
-    objectManager->Unitize();
-    objectManager->Scale(0.3);
-    glTranslatef(obj1X, obj1Y,-3);
-    objectManager->Draw();
-    glPopMatrix();
-
     ///Desenha vidas
     desenharVidas();
 
     glutSwapBuffers();
+
+    textureManager->Disable();
 }
 
 void idle ()
