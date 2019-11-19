@@ -1264,11 +1264,11 @@ drawPlayer()
         y = (raioPlayer * PI * senAngulo) + playerPositonY;
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[5] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5}, };
+            vertice v[4] = {{xAnterior, yAnterior, 0}, {x, y, 0}, {x, y, 0.5}, {xAnterior, yAnterior, 0.5} };
             setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
-            triangle t[4] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}, {v[4], v[2], v[3]}};
-            for(int k = 0; k < 3; k++)
+            triangle t[2] = {{v[0], v[1], v[3]}, {v[1], v[2], v[3]}};
+            for(int k = 0; k < 2; k++)
             {
                 CalculaNormal(t[k], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
                 glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
@@ -1300,6 +1300,39 @@ drawPlayer()
         xAnterior = x;
         yAnterior = y;
     }
+
+    ///Desenha parte de cima do jogador
+
+    /*x = 0;
+    y = 0;
+    xAnterior = 0;
+    yAnterior = 0;
+    cosAngulo;
+    senAngulo;
+    for(int i = anguloInicio; i < anguloFinal; i += 1)
+    {
+        cosAngulo = cos(((i * PI)/180));
+        senAngulo = sin(((i * PI)/180));
+        x = (raioPlayer * PI  * cosAngulo) + playerPositionX;
+        y = (raioPlayer * PI * senAngulo) + playerPositonY;
+        if(xAnterior != 0 && yAnterior != 0)
+        {
+            vertice v[3] = { {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5} };
+            setMaterial(brilho, ambient, difusa,especular );
+            glBegin(GL_TRIANGLES);
+            triangle t[1] = {{v[2], v[0], v[1]}};
+            CalculaNormal(t[0], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+            glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
+            for(int j = 0; j < 3; j++) // vertices do triangulo
+            {
+                glVertex3d(t[0].v[j].x, t[0].v[j].y, t[0].v[j].z);
+            }
+            glEnd();
+        }
+
+        xAnterior = x;
+        yAnterior = y;
+    } */
 
     ///Desenha parte de trás do jogador
     float xInicial = ((cos((anguloInicio * PI)/180)) * raioPlayer * PI) + playerPositionX;

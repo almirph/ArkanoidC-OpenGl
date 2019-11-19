@@ -42,7 +42,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1573866100 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
+1573867558 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -212,4 +212,111 @@
 	<malloc.h>
 	<time.h>
 	<dos.h>
+
+1535591431 source:c:\users\stardust\documents\arkanoidc-opengl\shared\glctexture.cpp
+	<string>
+	<stdio.h>
+	<malloc.h>
+	"GL/glut.h"
+	"png.h"
+	"glcTexture.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\gl\glut.h
+	"freeglut_std.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
+	<windows.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\png\png.h
+	"zlib.h"
+	"pngconf.h"
+	<crtdbg.h>
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\zlib\zlib.h
+	"zconf.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\zlib\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\png\pngconf.h
+	"pngusr.h"
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<stdio.h>
+	<sys/types.h>
+	<setjmp.h>
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+	<fp.h>
+	<math.h>
+	<m68881.h>
+	<mem.h>
+	<alloc.h>
+	<malloc.h>
+	<time.h>
+	<dos.h>
+
+1535591433 c:\users\stardust\documents\arkanoidc-opengl\shared\glctexture.h
+	<string>
+
+1573836948 source:c:\users\stardust\documents\arkanoidc-opengl\shared\glcwavefrontobject.cpp
+	"glcWavefrontObject.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\glcwavefrontobject.h
+	<math.h>
+	<stdio.h>
+	<GL/gl.h>
+
+1572313604 source:c:\users\stardust\documents\arkanoidc-opengl\src\bloco.cpp
+	<iostream>
+	"Bloco.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\src\bloco.h
+	<iostream>
+	"Ponto.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\src\ponto.h
+	<iostream>
+
+1573867558 source:c:\users\stardust\documents\arkanoidc-opengl\src\main.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<math.h>
+	<iostream>
+	<time.h>
+	"Bloco.h"
+	<vector>
+	<time.h>
+	"glcTexture.h"
+	"glcWavefrontObject.h"
+
+1572313604 c:\users\stardust\documents\arkanoidc-opengl\shared\windows\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1572313604 source:c:\users\stardust\documents\arkanoidc-opengl\src\ponto.cpp
+	<iostream>
+	"Ponto.h"
 
