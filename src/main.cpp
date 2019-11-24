@@ -612,11 +612,12 @@ void drawBlocos()
 void setTextures()
 {
     textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
-    textureManager->SetNumberOfTextures(4);       // Estabelece o número de texturas que será utilizado
+    textureManager->SetNumberOfTextures(5);       // Estabelece o número de texturas que será utilizado
     textureManager->CreateTexture("../data/ground.png", 0);
     textureManager->CreateTexture("../data/parede-lado.png", 1);
     textureManager->CreateTexture("../data/parede-curva.png", 2);
     textureManager->CreateTexture("../data/parede-curva-cima.png", 3);
+    textureManager->CreateTexture("../data/skybox2.png", 4);
 }
 
 void init(void)
@@ -1374,6 +1375,67 @@ void verificaColisaoFotebolVermelha()
     }
 }
 
+void desenhaSkyBox()
+{
+    float ambient[3]   = {.255, 0, 0};
+    float difusa[3] = {.255, 0, 0};
+    float especular[3] = {.255, 0, 0};
+    float brilho = 90.0;
+
+    float distSkyBox = 100;
+
+    vertice v[8] =
+    {
+        {-distSkyBox, distSkyBox,  distSkyBox}, ///V[0] - A
+        {distSkyBox, distSkyBox,  distSkyBox}, ///V[1] - B
+        {-distSkyBox, -distSkyBox,  distSkyBox}, ///V[2] - C
+        {distSkyBox, -distSkyBox, distSkyBox}, ///V[3] - D
+
+        {-distSkyBox, distSkyBox, -distSkyBox}, ///V[4] - E
+        {distSkyBox, distSkyBox, -distSkyBox}, ///V[5] - F
+        {-distSkyBox, -distSkyBox, -distSkyBox}, ///V[6] - G
+        {distSkyBox, -distSkyBox, -distSkyBox}, ///V[7] - H
+    };
+
+    triangle t1[12] = {
+        {v[3], v[7], v[5]},
+        {v[5], v[1], v[3]},
+
+        {v[2], v[6], v[4]},
+        {v[4], v[0], v[2]},
+
+        {v[0], v[2], v[3]},
+        {v[3], v[1], v[0]},
+
+        {v[4], v[6], v[7]},
+        {v[7], v[5], v[4]},
+
+        {v[0], v[4], v[5]},
+        {v[5], v[1], v[0]},
+
+        {v[6], v[2], v[3]},
+        {v[3], v[7], v[6]},
+    };
+
+    vertice vetorNormal;
+
+    for(int numT = 0; numT < 12; numT++)
+    {
+        textureManager->Bind(4);
+        setMaterial(brilho, ambient, difusa,especular );
+        glBegin(GL_TRIANGLES);
+        CalculaNormal(t1[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+        for(int j = 0; j < 3; j++)  // vertices do triangulo
+        {
+            glTexCoord2f(t1[numT].v[j].x, t1[numT].v[j].y);
+            glVertex3d(t1[numT].v[j].x, t1[numT].v[j].y, t1[numT].v[j].z);
+        }
+        glEnd();
+    }
+
+}
+
 void drawObject()
 {
     float ambient[3]   = {1, 1, 1};
@@ -1427,8 +1489,12 @@ void drawObject()
     drawCurvaEsquerda(315, 380);
     drawCurvaEsquerda(0, 45);
 
+    /// Desenha skybox
+    desenhaSkyBox();
+
     ///Desenha Blcos
     drawBlocos();
+
 
     ///Desenha Bola
     drawBall();
