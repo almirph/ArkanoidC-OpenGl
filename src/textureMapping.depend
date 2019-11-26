@@ -1,0 +1,55 @@
+# depslib dependency file v1.0
+1535591431 source:/ice/Downloads/CG/shared/glcTexture.cpp
+	<string>
+	<stdio.h>
+	<malloc.h>
+	"GL/glut.h"
+	"png.h"
+	"glcTexture.h"
+
+1535591433 /ice/Downloads/CG/shared/glcTexture.h
+	<string>
+
+1535591435 source:/ice/Downloads/CG/shared/glcWavefrontObject.cpp
+	"glcWavefrontObject.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+
+1535591437 /ice/Downloads/CG/shared/glcWavefrontObject.h
+	<math.h>
+	<stdio.h>
+	<GL/gl.h>
+
+1574727734 source:/ice/Downloads/CG/src/TextureMapping.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<math.h>
+	<iostream>
+	<time.h>
+	"Bloco.h"
+	<vector>
+	<time.h>
+	"glcTexture.h"
+	"glcWavefrontObject.h"
+
+1574727143 /ice/Downloads/CG/src/Bloco.h
+	<iostream>
+	"Ponto.h"
+
+1574727143 /ice/Downloads/CG/src/Ponto.h
+	<iostream>
+
+1574727143 source:/ice/Downloads/CG/src/bloco.cpp
+	<iostream>
+	"Bloco.h"
+
+1574727143 source:/ice/Downloads/CG/src/ponto.cpp
+	<iostream>
+	"Ponto.h"
+

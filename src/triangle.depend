@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1565204563 source:/ice/Downloads/CG/src/triangle.cpp
+	<stdio.h>
+	<GL/glut.h>
+
