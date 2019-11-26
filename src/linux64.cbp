@@ -34,6 +34,14 @@
 			<Add library="GLU" />
 			<Add library="z" />
 		</Linker>
+		<Unit filename="../../CG/shared/glcTexture.cpp" />
+		<Unit filename="../../CG/shared/glcTexture.h" />
+		<Unit filename="../../CG/shared/glcWavefrontObject.cpp" />
+		<Unit filename="../../CG/shared/glcWavefrontObject.h" />
+		<Unit filename="../shared/glcTexture.cpp" />
+		<Unit filename="../shared/glcTexture.h" />
+		<Unit filename="../shared/glcWavefrontObject.cpp" />
+		<Unit filename="../shared/glcWavefrontObject.h" />
 		<Unit filename="Bloco.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
