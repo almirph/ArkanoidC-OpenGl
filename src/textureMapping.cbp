@@ -41,9 +41,15 @@
 		<Unit filename="../shared/glcTexture.h">
 			<Option virtualFolder="shared/" />
 		</Unit>
+		<Unit filename="../shared/glcWavefrontObject.cpp" />
+		<Unit filename="../shared/glcWavefrontObject.h" />
+		<Unit filename="Bloco.h" />
+		<Unit filename="Ponto.h" />
 		<Unit filename="TextureMapping.cpp">
 			<Option virtualFolder="Files/" />
 		</Unit>
+		<Unit filename="bloco.cpp" />
+		<Unit filename="ponto.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

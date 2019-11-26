@@ -27,5 +27,6 @@
 		<Project filename="src/rayTracing.cbp" />
 		<Project filename="src/shaderExample.cbp" />
 		<Project filename="src/openglVersion.cbp" />
+		<Project filename="../ArkanoidC-OpenGl/src/linux64.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
