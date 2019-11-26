@@ -53,3 +53,57 @@
 	<iostream>
 	"Ponto.h"
 
+1574728574 source:/ice/Downloads/ArkanoidC-OpenGl/shared/glcTexture.cpp
+	<string>
+	<stdio.h>
+	<malloc.h>
+	"GL/glut.h"
+	"png.h"
+	"glcTexture.h"
+
+1574728574 /ice/Downloads/ArkanoidC-OpenGl/shared/glcTexture.h
+	<string>
+
+1574728574 source:/ice/Downloads/ArkanoidC-OpenGl/shared/glcWavefrontObject.cpp
+	"glcWavefrontObject.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+
+1574728574 /ice/Downloads/ArkanoidC-OpenGl/shared/glcWavefrontObject.h
+	<math.h>
+	<stdio.h>
+	<GL/gl.h>
+
+1574728575 source:/ice/Downloads/ArkanoidC-OpenGl/src/bloco.cpp
+	<iostream>
+	"Bloco.h"
+
+1574728575 /ice/Downloads/ArkanoidC-OpenGl/src/Bloco.h
+	<iostream>
+	"Ponto.h"
+
+1574728575 /ice/Downloads/ArkanoidC-OpenGl/src/Ponto.h
+	<iostream>
+
+1574728575 source:/ice/Downloads/ArkanoidC-OpenGl/src/ponto.cpp
+	<iostream>
+	"Ponto.h"
+
+1574728575 source:/ice/Downloads/ArkanoidC-OpenGl/src/TextureMapping.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<math.h>
+	<iostream>
+	<time.h>
+	"Bloco.h"
+	<vector>
+	<time.h>
+	"glcTexture.h"
+	"glcWavefrontObject.h"
+

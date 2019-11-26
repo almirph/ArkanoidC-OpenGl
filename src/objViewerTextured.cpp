@@ -197,8 +197,7 @@ void display(void)
     glRotatef( rotationY, 1.0, 0.0, 0.0 );
     glRotatef( rotationX, 0.0, 1.0, 0.0 );
 
-    // Use selected texture
-    textureManager->Bind(selected);
+
 
     // Use selected Object
     //objectManager->SetColor(1.0, 0.0, 0.0);
