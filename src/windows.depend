@@ -93,18 +93,18 @@
 	<iostream>
 	"Ponto.h"
 
-1574613237 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.cpp
+1574981653 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.cpp
 	<iostream>
 	"Bloco.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\bloco.h
 	<iostream>
 	"Ponto.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
 	<iostream>
 
-1574617915 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
+1574984958 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -117,9 +117,12 @@
 	<vector>
 	<time.h>
 	"glcTexture.h"
+	<fstream>
+	<cstring>
+	<cstddef>
 	"glcWavefrontObject.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glew.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glew.h
 	<stddef.h>
 	<inttypes.h>
 	<stdint.h>
@@ -127,10 +130,10 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glut.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\glut.h
 	"freeglut_std.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\gl\freeglut_std.h
 	<windows.h>
 	<OpenGL/gl.h>
 	<OpenGL/glu.h>
@@ -140,7 +143,7 @@
 
 1572113750 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\extras.h
 
-1574613237 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.cpp
+1574981654 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.cpp
 	<iostream>
 	"Ponto.h"
 
@@ -157,7 +160,7 @@
 	<stdio.h>
 	<GL/gl.h>
 
-1574613237 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.cpp
+1574981653 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.cpp
 	"glcWavefrontObject.h"
 	<math.h>
 	<stdio.h>
@@ -165,7 +168,7 @@
 	<string.h>
 	<assert.h>
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glcwavefrontobject.h
 	<math.h>
 	<stdio.h>
 	<GL/gl.h>
@@ -322,7 +325,7 @@
 	<iostream>
 	"Ponto.h"
 
-1574613237 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glctexture.cpp
+1574985246 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glctexture.cpp
 	<string>
 	<stdio.h>
 	<malloc.h>
@@ -330,21 +333,21 @@
 	"png.h"
 	"glcTexture.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\png\png.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\png\png.h
 	"zlib.h"
 	"pngconf.h"
 	<crtdbg.h>
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\zlib\zlib.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\zlib\zlib.h
 	"zconf.h"
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\zlib\zconf.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\zlib\zconf.h
 	<windows.h>
 	<sys/types.h>
 	<unistd.h>
 	<unixio.h>
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\png\pngconf.h
+1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\windows\include\png\pngconf.h
 	"pngusr.h"
 	"config.h"
 	<windows.h>
@@ -364,6 +367,6 @@
 	<time.h>
 	<dos.h>
 
-1574613237 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glctexture.h
+1574984246 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\shared\glctexture.h
 	<string>
 

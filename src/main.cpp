@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <stdlib.h>
@@ -11,7 +12,9 @@
 #include <vector>
 #include <time.h>
 #include "glcTexture.h"
-
+#include <fstream>
+#include <cstring>
+#include <cstddef>
 #define PI 3.14159265359
 
 #include "glcWavefrontObject.h"
@@ -19,7 +22,6 @@
 #define NUM_OBJECTS 2
 
 using namespace std;
-
 
 ///Texturas
 glcTexture *textureManager;
@@ -617,7 +619,7 @@ void setTextures()
     textureManager->CreateTexture("../data/parede-lado.png", 1);
     textureManager->CreateTexture("../data/parede-curva.png", 2);
     textureManager->CreateTexture("../data/parede-curva-cima.png", 3);
-    textureManager->CreateTexture("../data/skybox2.png", 4);
+    textureManager->CreateTexture("../data/skybox/hot_lf.png", 4);
 }
 
 void init(void)
@@ -1377,6 +1379,7 @@ void verificaColisaoFotebolVermelha()
 
 void desenhaSkyBox()
 {
+    textureManager->Bind(4);
     float ambient[3]   = {.255, 0, 0};
     float difusa[3] = {.255, 0, 0};
     float especular[3] = {.255, 0, 0};
@@ -1397,7 +1400,8 @@ void desenhaSkyBox()
         {distSkyBox, -distSkyBox, -distSkyBox}, ///V[7] - H
     };
 
-    triangle t1[12] = {
+    triangle t1[12] =
+    {
         {v[3], v[7], v[5]},
         {v[5], v[1], v[3]},
 
@@ -1421,7 +1425,6 @@ void desenhaSkyBox()
 
     for(int numT = 0; numT < 12; numT++)
     {
-        textureManager->Bind(4);
         setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t1[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
