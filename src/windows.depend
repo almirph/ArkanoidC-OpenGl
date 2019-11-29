@@ -104,7 +104,7 @@
 1574981653 c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\ponto.h
 	<iostream>
 
-1574984958 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
+1574991510 source:c:\users\outlookcast\desktop\cg\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>

@@ -1385,7 +1385,7 @@ void desenhaSkyBox()
     float especular[3] = {.255, 0, 0};
     float brilho = 90.0;
 
-    float distSkyBox = 100;
+    float distSkyBox = 10;
 
     vertice v[8] =
     {
@@ -1425,7 +1425,7 @@ void desenhaSkyBox()
 
     for(int numT = 0; numT < 12; numT++)
     {
-        setMaterial(brilho, ambient, difusa,especular );
+        //setMaterial(brilho, ambient, difusa,especular );
         glBegin(GL_TRIANGLES);
         CalculaNormal(t1[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
