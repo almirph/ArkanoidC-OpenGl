@@ -614,7 +614,7 @@ void drawBlocos()
 void setTextures()
 {
     textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
-    textureManager->SetNumberOfTextures(5);       // Estabelece o número de texturas que será utilizado
+    textureManager->SetNumberOfTextures(14);       // Estabelece o número de texturas que será utilizado
     textureManager->CreateTexture("../data/ground.png", 0);
     textureManager->CreateTexture("../data/parede-lado.png", 1);
     textureManager->CreateTexture("../data/parede-curva.png", 2);
@@ -622,6 +622,13 @@ void setTextures()
     textureManager->CreateTexture("../data/skybox/hot_lf.png", 4);
     textureManager->CreateTexture("../data/jogador-atras1.png", 5);
     textureManager->CreateTexture("../data/jogador-cima1.png", 6);
+    textureManager->CreateTexture("../data/universe.png", 7);
+    textureManager->CreateTexture("../data/front.png", 8);
+    textureManager->CreateTexture("../data/bottom.png", 9);
+    textureManager->CreateTexture("../data/back.png", 10);
+    textureManager->CreateTexture("../data/left.png", 11);
+    textureManager->CreateTexture("../data/right.png", 12);
+    textureManager->CreateTexture("../data/top.png", 13);
 }
 
 void init(void)
@@ -1396,63 +1403,68 @@ void verificaColisaoFotebolVermelha()
 
 void desenhaSkyBox()
 {
-    textureManager->Bind(4);
-    float ambient[3]   = {.255, 0, 0};
-    float difusa[3] = {.255, 0, 0};
-    float especular[3] = {.255, 0, 0};
-    float brilho = 90.0;
 
-    float distSkyBox = 10;
+      // Store the current matrix
+    glPushMatrix();
 
-    vertice v[8] =
-    {
-        {-distSkyBox, distSkyBox,  distSkyBox}, ///V[0] - A
-        {distSkyBox, distSkyBox,  distSkyBox}, ///V[1] - B
-        {-distSkyBox, -distSkyBox,  distSkyBox}, ///V[2] - C
-        {distSkyBox, -distSkyBox, distSkyBox}, ///V[3] - D
+    // Render the front quad
+    textureManager->Bind(10);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
+        glTexCoord2f(1, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
+        glTexCoord2f(1, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
+        glTexCoord2f(0, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
+    glEnd();
 
-        {-distSkyBox, distSkyBox, -distSkyBox}, ///V[4] - E
-        {distSkyBox, distSkyBox, -distSkyBox}, ///V[5] - F
-        {-distSkyBox, -distSkyBox, -distSkyBox}, ///V[6] - G
-        {distSkyBox, -distSkyBox, -distSkyBox}, ///V[7] - H
-    };
+    // Render the left quad
+    textureManager->Bind(12);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f(  10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
+        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
+        glTexCoord2f(0, 1); glVertex3f(  10.5f,  10.5f,  10.5f );
+    glEnd();
 
-    triangle t1[12] =
-    {
-        {v[3], v[7], v[5]},
-        {v[5], v[1], v[3]},
+    // Render the back quad
+    textureManager->Bind(8);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f,  10.5f );
+        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f,  10.5f );
 
-        {v[2], v[6], v[4]},
-        {v[4], v[0], v[2]},
+    glEnd();
 
-        {v[0], v[2], v[3]},
-        {v[3], v[1], v[0]},
+    // Render the right quad
+    textureManager->Bind(11);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
+        glTexCoord2f(1, 0); glVertex3f( -10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 1); glVertex3f( -10.5f,  10.5f,  10.5f );
+        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
+    glEnd();
 
-        {v[4], v[6], v[7]},
-        {v[7], v[5], v[4]},
+    // Render the top quad
+    textureManager->Bind(13);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
+        glTexCoord2f(0, 0); glVertex3f( -10.5f,  10.5f,  10.5f );
+        glTexCoord2f(1, 0); glVertex3f(  10.5f,  10.5f,  10.5f );
+        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
+    glEnd();
 
-        {v[0], v[4], v[5]},
-        {v[5], v[1], v[0]},
+    // Render the bottom quad
+    textureManager->Bind(9);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
+        glTexCoord2f(0, 1); glVertex3f( -10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 1); glVertex3f(  10.5f, -10.5f,  10.5f );
+        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
+    glEnd();
 
-        {v[6], v[2], v[3]},
-        {v[3], v[7], v[6]},
-    };
-
-    vertice vetorNormal;
-
-    for(int numT = 0; numT < 12; numT++)
-    {
-        //setMaterial(brilho, ambient, difusa,especular );
-        glBegin(GL_TRIANGLES);
-        CalculaNormal(t1[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
-        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
-        for(int j = 0; j < 3; j++)  // vertices do triangulo
-        {
-            glTexCoord2f(t1[numT].v[j].x, t1[numT].v[j].y);
-            glVertex3d(t1[numT].v[j].x, t1[numT].v[j].y, t1[numT].v[j].z);
-        }
-        glEnd();
-    }
+    // Restore enable bits and matrix
+    glPopAttrib();
+    glPopMatrix();
 
 }
 
@@ -1718,7 +1730,7 @@ void specialKey(int key, int x, int y)
 }
 
 float velocidadePlayer(int x) {
-    float velocidade = 0.05 + abs(x - 500)*0.005;
+    float velocidade = 0.03 + abs(x - 500)*0.005;
     return velocidade;
 }
 
