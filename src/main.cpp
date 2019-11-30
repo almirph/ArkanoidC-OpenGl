@@ -620,6 +620,8 @@ void setTextures()
     textureManager->CreateTexture("../data/parede-curva.png", 2);
     textureManager->CreateTexture("../data/parede-curva-cima.png", 3);
     textureManager->CreateTexture("../data/skybox/hot_lf.png", 4);
+    textureManager->CreateTexture("../data/jogador-atras1.png", 5);
+    textureManager->CreateTexture("../data/jogador-cima1.png", 6);
 }
 
 void init(void)
@@ -939,7 +941,7 @@ void desenharPause()
 }
 
 
-drawBuracos()
+void drawBuracos()
 {
     float ambient[3]   = {0.0, 0, 0.0};
     float difusa[3] = {0.0, 0, 0.0};
@@ -952,8 +954,8 @@ drawBuracos()
     {
         {-2.9f, 2.75f, 0},///V[0]
         {-0.9, 2.75f, 0}, ///V[1]
-        {-0.9, 2.75f, 0.7f}, ///V[2]
-        {-2.9f, 2.75f, 0.7f}, ///V[3]
+        {-0.9, 2.75f, 0.5f}, ///V[2]
+        {-2.9f, 2.75f, 0.5f}, ///V[3]
         {-2.9f, 3.1f, 0.7f}, ///V[4]
         {-0.9, 3.1f, 0.7f}, ///V[5]
         {-3.1f, 3.1f, 0}, ///V[6]
@@ -970,7 +972,7 @@ drawBuracos()
         {v3[9], v3[8], v3[6]},
     };
 
-    for(int numT = 0; numT < 6; numT++)
+    for(int numT = 0; numT < 2; numT++)
     {
         if(!isEndGame)
             setMaterial(brilho, ambient, difusa,especular );
@@ -992,8 +994,8 @@ drawBuracos()
     {
         {2.9f, 2.75f, 0},///V[0]
         {0.9, 2.75f, 0}, ///V[1]
-        {0.9, 2.75f, 0.7f}, ///V[2]
-        {2.9f, 2.75f, 0.7f}, ///V[3]
+        {0.9, 2.75f, 0.5f}, ///V[2]
+        {2.9f, 2.75f, 0.5f}, ///V[3]
         {2.9f, 3.1f, 0.7f}, ///V[4]
         {0.9, 3.1f, 0.7f}, ///V[5]
         {3.1f, 3.1f, 0}, ///V[6]
@@ -1010,7 +1012,7 @@ drawBuracos()
         {v4[9], v4[8], v4[6]},
     };
 
-    for(int numT = 0; numT < 6; numT++)
+    for(int numT = 0; numT < 2; numT++)
     {
         if(!isEndGame)
             setMaterial(brilho, ambient, difusa,especular );
@@ -1244,11 +1246,11 @@ void drawCurvaEsquerda(int anguloInicio, int anguloFinal)
     }
 }
 
-drawPlayer()
+void drawPlayer()
 {
-    float ambient[3]   = {.255, 0, 0};
-    float difusa[3] = {.255, 0, 0};
-    float especular[3] = {.255, 0, 0};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
     int anguloInicio = 45;
     int anguloFinal = 135;
@@ -1259,6 +1261,9 @@ drawPlayer()
     float yAnterior = 0;
     float cosAngulo;
     float senAngulo;
+
+    textureManager->Bind(5);
+
     for(int i = anguloInicio; i < anguloFinal; i += 1)
     {
         cosAngulo = cos(((i * PI)/180));
@@ -1277,6 +1282,7 @@ drawPlayer()
                 glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
                 for(int j = 0; j < 3; j++) // vertices do triangulo
                 {
+                    glTexCoord2f(t[k].v[j].x, t[k].v[j].z);
                     glVertex3d(t[k].v[j].x, t[k].v[j].y, t[k].v[j].z);
                 }
             }
@@ -1306,12 +1312,15 @@ drawPlayer()
 
     ///Desenha parte de cima do jogador
 
-    /*x = 0;
+    x = 0;
     y = 0;
     xAnterior = 0;
     yAnterior = 0;
     cosAngulo;
     senAngulo;
+
+    textureManager->Bind(6);
+
     for(int i = anguloInicio; i < anguloFinal; i += 1)
     {
         cosAngulo = cos(((i * PI)/180));
@@ -1320,7 +1329,7 @@ drawPlayer()
         y = (raioPlayer * PI * senAngulo) + playerPositonY;
         if(xAnterior != 0 && yAnterior != 0)
         {
-            vertice v[3] = { {x, y, 0.5}, {xAnterior, yAnterior, 0.5}, {playerPositionX, -3, 0.5} };
+            vertice v[3] = { {x, y - 0.01, 0.5}, {xAnterior, yAnterior - 0.01, 0.5}, {playerPositionX, -3.01, 0.5} };
             setMaterial(brilho, ambient, difusa,especular );
             glBegin(GL_TRIANGLES);
             triangle t[1] = {{v[2], v[0], v[1]}};
@@ -1328,6 +1337,7 @@ drawPlayer()
             glNormal3f(vetorNormal.x, vetorNormal.y, vetorNormal.z);
             for(int j = 0; j < 3; j++) // vertices do triangulo
             {
+                glTexCoord2f(t[0].v[j].x, t[0].v[j].y);
                 glVertex3d(t[0].v[j].x, t[0].v[j].y, t[0].v[j].z);
             }
             glEnd();
@@ -1335,20 +1345,24 @@ drawPlayer()
 
         xAnterior = x;
         yAnterior = y;
-    } */
+    }
+
+    float distParteAtras = -3.01;
 
     ///Desenha parte de trás do jogador
     float xInicial = ((cos((anguloInicio * PI)/180)) * raioPlayer * PI) + playerPositionX;
     float xFinal = ((cos((anguloFinal * PI)/180)) * raioPlayer * PI) + playerPositionX;
 
+    textureManager->Bind(5);
+
     vertice vetorNormalP;
 
     vertice v2[4] =
     {
-        {xInicial, -3.02f,  0}, ///V[0]
-        {xFinal, -3.02f,  0}, ///V[1]
-        {xFinal,  -3.02f,  0.5f}, ///V[2]
-        {xInicial,  -3.02f, 0.5f}, ///V[3]
+        {xInicial, distParteAtras,  0}, ///V[0]
+        {xFinal, distParteAtras,  0}, ///V[1]
+        {xFinal,  distParteAtras,  0.5f}, ///V[2]
+        {xInicial,  distParteAtras, 0.5f}, ///V[3]
     };
 
     triangle t2[2] = {{v2[1], v2[0], v2[3]},
@@ -1362,7 +1376,10 @@ drawPlayer()
         CalculaNormal(t2[numT], &vetorNormalP); // Passa face triangular e endereço do vetor normal de saída
         glNormal3f(vetorNormalP.x, vetorNormalP.y,vetorNormalP.z);
         for(int j = 0; j < 3; j++) // vertices do triangulo
+        {
+            glTexCoord2f(t2[numT].v[j].x, t2[numT].v[j].z);
             glVertex3d(t2[numT].v[j].x, t2[numT].v[j].y, t2[numT].v[j].z);
+        }
         glEnd();
     }
 
@@ -1700,8 +1717,12 @@ void specialKey(int key, int x, int y)
     }
 }
 
-// Mouse callback
+float velocidadePlayer(int x) {
+    float velocidade = 0.05 + abs(x - 500)*0.005;
+    return velocidade;
+}
 
+// Mouse callback
 void mouse(int button, int state, int x, int y)
 {
     if(!jogoPausado)
@@ -1743,11 +1764,11 @@ void mousePassive(int x, int y)
     {
         if(x > 500 && playerPositionX < 4.18)
         {
-            playerPositionX += 0.15;
+            playerPositionX += velocidadePlayer(x);
         }
         else if(x < 500 && playerPositionX > -4.18)
         {
-            playerPositionX -= 0.15;
+            playerPositionX -= velocidadePlayer(x);
         }
     }
 }
