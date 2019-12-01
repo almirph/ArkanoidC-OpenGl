@@ -42,6 +42,7 @@ object *objectList;
 
 glcWavefrontObject *objectManager = NULL;
 
+bool jogoComecou = false;
 float obj1X = 2;
 float obj1Y = 2.65;
 float velObj1X = 0;
@@ -509,6 +510,22 @@ bool verificaEndGame()
     return true;
 }
 
+void drawTelaInicial()
+{
+
+    textureManager ->Bind(14);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0,0);
+    glVertex3f(-5,-5,0);
+    glTexCoord2f(1,0);
+    glVertex3f(5,-5,0);
+    glTexCoord2f(1,1);
+    glVertex3f(5,5,0);
+    glTexCoord2f(0,1);
+    glVertex3f(-5,5,0);
+    glEnd();
+}
+
 void drawBlocos()
 {
     float ambient[3]  = {0.0, 0.355, 0.0};
@@ -614,7 +631,7 @@ void drawBlocos()
 void setTextures()
 {
     textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
-    textureManager->SetNumberOfTextures(14);       // Estabelece o número de texturas que será utilizado
+    textureManager->SetNumberOfTextures(15);       // Estabelece o número de texturas que será utilizado
     textureManager->CreateTexture("../data/ground.png", 0);
     textureManager->CreateTexture("../data/parede-lado.png", 1);
     textureManager->CreateTexture("../data/parede-curva.png", 2);
@@ -629,6 +646,7 @@ void setTextures()
     textureManager->CreateTexture("../data/left.png", 11);
     textureManager->CreateTexture("../data/right.png", 12);
     textureManager->CreateTexture("../data/top.png", 13);
+    textureManager->CreateTexture("../data/tela-inicial.png", 14);
 }
 
 void init(void)
@@ -730,11 +748,12 @@ void drawSeta()
 
 void desenharVidas()
 {
-    float ambient[3]   = {0.255, 0, 0};
-    float difusa[3] = {0.255, 0, 0.};
-    float especular[3] = {0.255, 0, 0};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
     float auxPos = 0.1;
+
     for(int i=0; i<qntVidas; i++)
     {
 
@@ -1404,68 +1423,91 @@ void verificaColisaoFotebolVermelha()
 void desenhaSkyBox()
 {
 
-      // Store the current matrix
+    // Store the current matrix
     glPushMatrix();
 
     // Render the front quad
     textureManager->Bind(10);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
-        glTexCoord2f(1, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
-        glTexCoord2f(1, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
-        glTexCoord2f(0, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f(  10.5f, -10.5f, -10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f( -10.5f, -10.5f, -10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f( -10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f(  10.5f,  10.5f, -10.5f );
     glEnd();
 
     // Render the left quad
     textureManager->Bind(12);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f(  10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
-        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
-        glTexCoord2f(0, 1); glVertex3f(  10.5f,  10.5f,  10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f(  10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f(  10.5f, -10.5f, -10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f(  10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f(  10.5f,  10.5f,  10.5f );
     glEnd();
 
     // Render the back quad
     textureManager->Bind(8);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f,  10.5f );
-        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f,  10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f( -10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f(  10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f(  10.5f,  10.5f,  10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f( -10.5f,  10.5f,  10.5f );
 
     glEnd();
 
     // Render the right quad
     textureManager->Bind(11);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
-        glTexCoord2f(1, 0); glVertex3f( -10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 1); glVertex3f( -10.5f,  10.5f,  10.5f );
-        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f( -10.5f, -10.5f, -10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f( -10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f( -10.5f,  10.5f,  10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f( -10.5f,  10.5f, -10.5f );
     glEnd();
 
     // Render the top quad
     textureManager->Bind(13);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 1); glVertex3f( -10.5f,  10.5f, -10.5f );
-        glTexCoord2f(0, 0); glVertex3f( -10.5f,  10.5f,  10.5f );
-        glTexCoord2f(1, 0); glVertex3f(  10.5f,  10.5f,  10.5f );
-        glTexCoord2f(1, 1); glVertex3f(  10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f( -10.5f,  10.5f, -10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f( -10.5f,  10.5f,  10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f(  10.5f,  10.5f,  10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f(  10.5f,  10.5f, -10.5f );
     glEnd();
 
     // Render the bottom quad
     textureManager->Bind(9);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f( -10.5f, -10.5f, -10.5f );
-        glTexCoord2f(0, 1); glVertex3f( -10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 1); glVertex3f(  10.5f, -10.5f,  10.5f );
-        glTexCoord2f(1, 0); glVertex3f(  10.5f, -10.5f, -10.5f );
+    glTexCoord2f(0, 0);
+    glVertex3f( -10.5f, -10.5f, -10.5f );
+    glTexCoord2f(0, 1);
+    glVertex3f( -10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 1);
+    glVertex3f(  10.5f, -10.5f,  10.5f );
+    glTexCoord2f(1, 0);
+    glVertex3f(  10.5f, -10.5f, -10.5f );
     glEnd();
 
     // Restore enable bits and matrix
     glPopAttrib();
     glPopMatrix();
-
 }
 
 void drawObject()
@@ -1477,100 +1519,118 @@ void drawObject()
     vertice vetorNormal;
 
     textureManager->Bind(0);
-
-    vertice v[8] =
+    if(jogoComecou)
     {
-        {-5.0f, -3.0f,  0.0f},
-        {-5.0f, 3.0f,  0.0f},
-        {5.0f,  3.0f,  0.0f},
-        {5.0f,  -3.0f, 0.0f}
-    };
 
 
-    triangle t[10] = {{v[1], v[0], v[3]},
-        {v[3], v[2], v[1]},
-    };
-
-    for(int numT = 0; numT < 2; numT++)
-    {
-        if(!isEndGame)
-            setMaterial(brilho, ambient, difusa,especular );
-        else
-            setMaterial(brilho, ambient, difusa,especular );
-        glBegin(GL_TRIANGLES);
-        CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
-        glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
-        for(int j = 0; j < 3; j++)  // vertices do triangulo
+        vertice v[8] =
         {
-            glTexCoord2f(t[numT].v[j].x, t[numT].v[j].y);
-            glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+            {-5.0f, -3.0f,  0.0f},
+            {-5.0f, 3.0f,  0.0f},
+            {5.0f,  3.0f,  0.0f},
+            {5.0f,  -3.0f, 0.0f}
+        };
+
+
+        triangle t[10] = {{v[1], v[0], v[3]},
+            {v[3], v[2], v[1]},
+        };
+
+        for(int numT = 0; numT < 2; numT++)
+        {
+            if(!isEndGame)
+                setMaterial(brilho, ambient, difusa,especular );
+            else
+                setMaterial(brilho, ambient, difusa,especular );
+            glBegin(GL_TRIANGLES);
+            CalculaNormal(t[numT], &vetorNormal); // Passa face triangular e endereço do vetor normal de saída
+            glNormal3f(vetorNormal.x, vetorNormal.y,vetorNormal.z);
+            for(int j = 0; j < 3; j++)  // vertices do triangulo
+            {
+                glTexCoord2f(t[numT].v[j].x, t[numT].v[j].y);
+                glVertex3d(t[numT].v[j].x, t[numT].v[j].y, t[numT].v[j].z);
+            }
+            glEnd();
         }
-        glEnd();
-    }
 
-    isEndGame = verificaEndGame();
-    verificaColisaoBlocos();
-    verificaColisaoParedesPlanas();
+        isEndGame = verificaEndGame();
+        verificaColisaoBlocos();
+        verificaColisaoParedesPlanas();
 
-    ///Desenha Jogador
-    drawPlayer();
+        ///Desenha Jogador
+        drawPlayer();
 
-    ///Desenha paredes
-    drawParedes();
-    drawCurvaDireita(135, 225);
-    drawCurvaEsquerda(315, 380);
-    drawCurvaEsquerda(0, 45);
+        ///Desenha paredes
+        drawParedes();
+        drawCurvaDireita(135, 225);
+        drawCurvaEsquerda(315, 380);
+        drawCurvaEsquerda(0, 45);
 
-    /// Desenha skybox
-    desenhaSkyBox();
+        /// Desenha skybox
+        desenhaSkyBox();
 
-    ///Desenha Blcos
-    drawBlocos();
+        ///Desenha Blcos
+        drawBlocos();
 
 
-    ///Desenha Bola
-    drawBall();
+        ///Desenha Bola
+        drawBall();
 
-    /// Desenha pause
-    desenharPause();
+        /// Desenha pause
+        desenharPause();
 
-    ///Desenha Seta
-    verificaGameOver();
-    if(!shooted)
-    {
-        drawSeta();
-    }
+        ///Desenha Seta
+        verificaGameOver();
+        if(!shooted)
+        {
+            drawSeta();
+        }
 
-    ///
-    drawBuracos();
+        ///
+        drawBuracos();
 
-    ///Object
-    glPushMatrix();
-    if(exibirObjeto)
-    {
-        obj1X -= velObj1X/2;
-        obj1Y -= velObj1Y/2;
-        objectManager->SelectObject(selected);
-        objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
-        objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
-        objectManager->Unitize();
-        objectManager->Scale(0.12);
-        glTranslatef(obj1X, obj1Y, 0.03);
-        objectManager->Draw();
-        verificaColisaoFotebolVermelha();
+        ///Object
+        glPushMatrix();
+        if(exibirObjeto)
+        {
+            obj1X -= velObj1X/2;
+            obj1Y -= velObj1Y/2;
+            objectManager->SelectObject(selected);
+            objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
+            objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+            objectManager->Unitize();
+            objectManager->Scale(0.12);
+            glTranslatef(obj1X, obj1Y, 0.03);
+            objectManager->Draw();
+            verificaColisaoFotebolVermelha();
+        }
+        else
+        {
+            atualizaTimer();
+            objectManager->SelectObject(selected);
+            objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
+            objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+            objectManager->Unitize();
+            objectManager->Scale(0.001);
+            objectManager->Draw();
+        }
+        glPopMatrix();
     }
     else
     {
-        atualizaTimer();
+        glPushMatrix();
         objectManager->SelectObject(selected);
         objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
         objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
         objectManager->Unitize();
         objectManager->Scale(0.001);
         objectManager->Draw();
-    }
-    glPopMatrix();
+        glPopMatrix();
+        glPopMatrix();
 
+        ///Desenha tela inicial
+        drawTelaInicial();
+    }
 }
 
 void display(void)
@@ -1641,7 +1701,6 @@ void reshape (int w, int h)
 {
     width = w;
     height = h;
-
     if(isOrtho)
     {
         glViewport (0, 0, (GLsizei) w, (GLsizei) h);
@@ -1656,15 +1715,12 @@ void reshape (int w, int h)
         glLoadIdentity ();
         gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 0.01, 200.0);
     }
-
 }
 
 void keyboard (unsigned char key, int x, int y)
 {
-
-    switch (tolower(key))
+    if(key == 27)
     {
-    case 27:
         for(int i=0; i<vetorBlocos.size(); i++)
         {
             delete vetorBlocos[i];
@@ -1676,60 +1732,69 @@ void keyboard (unsigned char key, int x, int y)
         }
 
         exit(0);
-        break;
-    case 'p':
-        isOrtho = !isOrtho;
-        rotationX = 0;
-        rotationY = 0;
-        last_x = 0;
-        last_y = 0;
-
-        reshape(1000, 600);
-        break;
-    case ' ':
-        jogoPausado = !jogoPausado;
-
-        if(!jogoPausado)
-        {
-            podeMovimentar = false;
-        }
-
-        break;
-    case 'r':
-        reiniciaJogo();
-        break;
-    case 'c':
-
-        podeMovimentar = !podeMovimentar;
-        if(podeMovimentar)
-        {
-            jogoPausado = true;
-        }
-        break;
     }
 
+    if(jogoComecou)
+    {
+        switch (tolower(key))
+        {
+        case 'p':
+            isOrtho = !isOrtho;
+            rotationX = 0;
+            rotationY = 0;
+            last_x = 0;
+            last_y = 0;
+
+            reshape(1000, 600);
+            break;
+        case ' ':
+            jogoPausado = !jogoPausado;
+
+            if(!jogoPausado)
+            {
+                podeMovimentar = false;
+            }
+
+            break;
+        case 'r':
+            reiniciaJogo();
+            break;
+        case 'c':
+
+            podeMovimentar = !podeMovimentar;
+            if(podeMovimentar)
+            {
+                jogoPausado = true;
+            }
+            break;
+        }
+    }
 }
 
 
 void specialKey(int key, int x, int y)
 {
-    bool isOrthoAux = isOrtho;
-    if(GLUT_KEY_F12 == key && !isFullScreen)
+    if(jogoComecou)
     {
-        glutFullScreen();
-        glutReshapeFunc(reshape);
-        isFullScreen = true;
-    }
-    else if(GLUT_KEY_F12 == key && isFullScreen)
-    {
-        glutReshapeWindow(1000, 600);
-        glutPositionWindow(0,0);
-        glutReshapeFunc(reshape);
-        isFullScreen = false;
+        bool isOrthoAux = isOrtho;
+        if(GLUT_KEY_F12 == key && !isFullScreen)
+        {
+            glutFullScreen();
+            glutReshapeFunc(reshape);
+            isFullScreen = true;
+        }
+        else if(GLUT_KEY_F12 == key && isFullScreen)
+        {
+            glutReshapeWindow(1000, 600);
+            glutPositionWindow(0,0);
+            glutReshapeFunc(reshape);
+            isFullScreen = false;
+        }
     }
 }
 
-float velocidadePlayer(int x) {
+float velocidadePlayer(int x)
+{
     float velocidade = 0.03 + abs(x - 500)*0.005;
     return velocidade;
 }
@@ -1737,14 +1802,14 @@ float velocidadePlayer(int x) {
 // Mouse callback
 void mouse(int button, int state, int x, int y)
 {
-    if(!jogoPausado)
+    if(!jogoPausado && jogoComecou)
     {
         if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
         {
             last_x = x;
             last_y = y;
         }
-        if ( button == GLUT_LEFT_BUTTON && !shooted)
+        if ( button == GLUT_LEFT_BUTTON && !shooted && state == 0)
         {
             ballPositionY = playerPositonY + 1;
             ballPositionX = playerPositionX;
@@ -1768,11 +1833,16 @@ void mouse(int button, int state, int x, int y)
             }
         }
     }
+    else if ( button == GLUT_LEFT_BUTTON )
+    {
+
+        jogoComecou = true;
+    }
 }
 
 void mousePassive(int x, int y)
 {
-    if(!jogoPausado)
+    if(!jogoPausado && jogoComecou)
     {
         if(x > 500 && playerPositionX < 4.18)
         {

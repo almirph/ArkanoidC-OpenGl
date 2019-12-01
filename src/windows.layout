@@ -2,19 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="..\shared\glcWavefrontObject.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="133" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="Bloco.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\shared\glcWavefrontObject.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\shared\glcWavefrontObject.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1647" topLine="33" />
+			<Cursor1 position="133" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\shared\glcTexture.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -22,40 +17,29 @@
 			<Cursor1 position="5231" topLine="160" />
 		</Cursor>
 	</File>
-	<File name="bloco.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="406" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="42870" topLine="1080" />
+			<Cursor1 position="53265" topLine="1822" />
 		</Cursor>
-		<Folding>
-			<Collapse line="944" />
-			<Collapse line="1031" />
-			<Collapse line="1144" />
-			<Collapse line="1267" />
-			<Collapse line="1388" />
-			<Collapse line="1564" />
-			<Collapse line="1592" />
-			<Collapse line="1601" />
-			<Collapse line="1628" />
-			<Collapse line="1650" />
-			<Collapse line="1702" />
-			<Collapse line="1726" />
-			<Collapse line="1761" />
-			<Collapse line="1777" />
-		</Folding>
 	</File>
-	<File name="..\shared\glcTexture.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\shared\glcWavefrontObject.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1046" topLine="12" />
+			<Cursor1 position="1647" topLine="33" />
 		</Cursor>
 	</File>
 	<File name="Ponto.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="bloco.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="406" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\shared\glcTexture.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1046" topLine="12" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
