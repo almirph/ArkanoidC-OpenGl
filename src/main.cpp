@@ -631,7 +631,7 @@ void drawBlocos()
 void setTextures()
 {
     textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
-    textureManager->SetNumberOfTextures(15);       // Estabelece o número de texturas que será utilizado
+    textureManager->SetNumberOfTextures(16);       // Estabelece o número de texturas que será utilizado
     textureManager->CreateTexture("../data/ground.png", 0);
     textureManager->CreateTexture("../data/parede-lado.png", 1);
     textureManager->CreateTexture("../data/parede-curva.png", 2);
@@ -647,6 +647,7 @@ void setTextures()
     textureManager->CreateTexture("../data/right.png", 12);
     textureManager->CreateTexture("../data/top.png", 13);
     textureManager->CreateTexture("../data/tela-inicial.png", 14);
+    textureManager->CreateTexture("../data/red.png", 15);
 }
 
 void init(void)
@@ -700,10 +701,13 @@ void calculaVelocidadeBola(int angulo)
 
 void drawBall()
 {
-    float ambient[3]   = {0.255, 0, 0};
-    float difusa[3] = {0.255, 0, 0.};
-    float especular[3] = {0.255, 0, 0};
+    float ambient[3]   = {1, 1, 1};
+    float difusa[3] = {1, 1, 1};
+    float especular[3] = {1, 1, 1};
     float brilho = 90.0;
+
+    textureManager->Bind(15);
+
     if(!isEndGame)
     {
         glPushMatrix();
@@ -721,7 +725,7 @@ void drawBall()
             }
             glTranslatef(ballPositionX, ballPositionY, 0);
         }
-        setMaterial(brilho, ambient, difusa,especular );
+        glTexCoord2f(1,0);
         glutSolidSphere(ballSize,100,100);
         glPopMatrix();
     }
@@ -734,13 +738,16 @@ void drawSeta()
     float difusa[3] = {0.255, 0, 0.};
     float especular[3] = {0.255, 0, 0};
     float brilho = 90.0;
+
+    textureManager->Bind(15);
+
     if(!isEndGame)
     {
         glPushMatrix();
         glTranslatef(playerPositionX,playerPositonY+1,0.1);
         glRotatef(arrowAngle,0,0,1);
         glRotatef(-90, 1,0,0);
-        setMaterial(brilho, ambient, difusa,especular );
+        glTexCoord2f(1,0);
         glutSolidCone(arrowWidth, arrowSize,100,100);
         glPopMatrix();
     }
@@ -748,11 +755,13 @@ void drawSeta()
 
 void desenharVidas()
 {
-    float ambient[3]   = {1, 1, 1};
+    float ambient[3]   = {1.0, 1.0, 1.0};
     float difusa[3] = {1, 1, 1};
     float especular[3] = {1, 1, 1};
     float brilho = 90.0;
     float auxPos = 0.1;
+
+    textureManager->Bind(15);
 
     for(int i=0; i<qntVidas; i++)
     {
@@ -761,7 +770,7 @@ void desenharVidas()
         {
             glPushMatrix();
             glTranslatef(auxPos -4.8, 2.7, 1);
-            setMaterial(brilho, ambient, difusa,especular );
+            glTexCoord2f(1,0);
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
@@ -770,7 +779,7 @@ void desenharVidas()
         {
             glPushMatrix();
             glTranslatef(auxPos -5, 2.9, 1.6);
-            setMaterial(brilho, ambient, difusa,especular );
+            glTexCoord2f(1,0);
             glutSolidSphere(ballSize/1.1,100,100);
             glPopMatrix();
             auxPos += 0.3;
@@ -1653,8 +1662,12 @@ void display(void)
     drawObject();
     glPopMatrix();
 
-    ///Desenha vidas
-    desenharVidas();
+    if(jogoComecou)
+    {
+        ///Desenha vidas
+        desenharVidas();
+    }
+
 
     glutSwapBuffers();
 
@@ -1835,7 +1848,6 @@ void mouse(int button, int state, int x, int y)
     }
     else if ( button == GLUT_LEFT_BUTTON )
     {
-
         jogoComecou = true;
     }
 }
