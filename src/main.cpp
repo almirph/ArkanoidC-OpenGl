@@ -11,15 +11,15 @@
 #include "Bloco.h"
 #include <vector>
 #include <time.h>
-#include "glcTexture.h"
 #include <fstream>
 #include <cstring>
 #include <cstddef>
 #define PI 3.14159265359
 
 #include "glcWavefrontObject.h"
-
+#include "glcTexture.h"
 #define NUM_OBJECTS 2
+#define TEXTURE_NUMBER 17
 
 using namespace std;
 
@@ -28,8 +28,31 @@ glcTexture *textureManager;
 
 char objectFiles[NUM_OBJECTS][50] =
 {
-    "../data/obj/ball.obj",
+    "../data/obj/sphere.obj",
     "../data/obj/al.obj",
+};
+
+
+
+char textureFiles[TEXTURE_NUMBER][50] =
+{
+    "../data/ground.png",
+    "../data/parede-lado.png",
+    "../data/parede-curva.png",
+    "../data/parede-curva-cima.png",
+    "../data/skybox/hot_lf.png",
+    "../data/jogador-atras1.png",
+    "../data/jogador-cima1.png",
+    "../data/universe.png",
+    "../data/front.png",
+    "../data/bottom.png",
+    "../data/back.png",
+    "../data/left.png",
+    "../data/right.png",
+    "../data/top.png",
+    "../data/tela-inicial.png",
+    "../data/red.png",
+    "../data/fish.png"
 };
 
 typedef struct
@@ -43,6 +66,7 @@ object *objectList;
 glcWavefrontObject *objectManager = NULL;
 
 bool jogoComecou = false;
+float objSize = 0.3;
 float obj1X = 2;
 float obj1Y = 2.65;
 float velObj1X = 0;
@@ -119,8 +143,8 @@ void velocidadeInicialObjetos()
     int anguloAuxx = (rand() % 60) - 30;;
     double anguloRadianos = ((anguloAuxx * PI)/180);
 
-    velObj1X = (anguloAuxx >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola);
-    velObj1Y = fabs(cos(anguloRadianos) * forcaBola);
+    velObj1X = (anguloAuxx >= 0) ? -fabs(sin(anguloRadianos) * forcaBola) : fabs(sin(anguloRadianos) * forcaBola)/5;
+    velObj1Y = fabs(cos(anguloRadianos) * forcaBola)/5;
 }
 
 void setInitialTime()
@@ -628,28 +652,6 @@ void drawBlocos()
     }
 }
 
-void setTextures()
-{
-    textureManager = new glcTexture();            // Criação do arquivo que irá gerenciar as texturas
-    textureManager->SetNumberOfTextures(16);       // Estabelece o número de texturas que será utilizado
-    textureManager->CreateTexture("../data/ground.png", 0);
-    textureManager->CreateTexture("../data/parede-lado.png", 1);
-    textureManager->CreateTexture("../data/parede-curva.png", 2);
-    textureManager->CreateTexture("../data/parede-curva-cima.png", 3);
-    textureManager->CreateTexture("../data/skybox/hot_lf.png", 4);
-    textureManager->CreateTexture("../data/jogador-atras1.png", 5);
-    textureManager->CreateTexture("../data/jogador-cima1.png", 6);
-    textureManager->CreateTexture("../data/universe.png", 7);
-    textureManager->CreateTexture("../data/front.png", 8);
-    textureManager->CreateTexture("../data/bottom.png", 9);
-    textureManager->CreateTexture("../data/back.png", 10);
-    textureManager->CreateTexture("../data/left.png", 11);
-    textureManager->CreateTexture("../data/right.png", 12);
-    textureManager->CreateTexture("../data/top.png", 13);
-    textureManager->CreateTexture("../data/tela-inicial.png", 14);
-    textureManager->CreateTexture("../data/red.png", 15);
-}
-
 void init(void)
 {
     glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -657,6 +659,14 @@ void init(void)
     glEnable(GL_DEPTH_TEST);               // Habilita Z-buffer
     glEnable(GL_LIGHTING);                 // Habilita luz
     glEnable(GL_LIGHT0);                   // habilita luz 0
+
+    glEnable(GL_LIGHT0);
+
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.2);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Cor da fonte de luz (RGBA)
     GLfloat cor_luz[]     = { 1.0, 1.0, 1.0, 1.0};
@@ -669,24 +679,31 @@ void init(void)
     glLightfv(GL_LIGHT0, GL_SPECULAR, cor_luz);
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
 
-    // LOAD OBJECTS
+
+
+    ///Setar Texturas
+    textureManager = new glcTexture();
+    textureManager->SetNumberOfTextures(TEXTURE_NUMBER);       // Estabelece o número de texturas que será utilizado
+    textureManager->SetWrappingMode(GL_REPEAT);
+    for(int i = 0; i < TEXTURE_NUMBER; i++)
+        textureManager->CreateTexture( textureFiles[i], i);
+
+    /// LOAD OBJECTS
     objectManager = new glcWavefrontObject();
     objectManager->SetNumberOfObjects(NUM_OBJECTS);
     for(int i = 0; i < NUM_OBJECTS; i++)
     {
-
         objectManager->SelectObject(i);
         objectManager->ReadObject(objectFiles[i]);
         objectManager->Unitize();
         objectManager->FacetNormal();
         objectManager->VertexNormals(90.0);
-        objectManager->Draw();
+        objectManager->Scale(5);
     }
     setInitialTime();
     velocidadeInicialObjetos();
 
-    ///Setar Texturas
-    setTextures();
+
 }
 
 void calculaVelocidadeBola(int angulo)
@@ -1422,8 +1439,17 @@ void drawPlayer()
 
 void verificaColisaoFotebolVermelha()
 {
-    if(ballPositionX+ballSize >= obj1X && ballPositionX-ballSize <= obj1X && ballPositionY+ballSize >= obj1Y && ballPositionY-ballSize <= obj1Y)
+    if(ballPositionX+ballSize >= obj1X - objSize && ballPositionX-ballSize <= obj1X + objSize  && ballPositionY+ballSize >= obj1Y - objSize && ballPositionY-ballSize <= obj1Y + objSize)
     {
+        velObj1X = -velObj1X;
+        velObj1Y = -velObj1Y;
+        ballSpeedX = -ballSpeedX;
+        ballSpeedY = -ballSpeedY;
+    }
+}
+
+void verificaPosicaoObj(){
+    if(obj1Y < -3) {
         exibirObjeto = false;
         setInitialTime();
     }
@@ -1521,17 +1547,14 @@ void desenhaSkyBox()
 
 void drawObject()
 {
-    float ambient[3]   = {1, 1, 1};
-    float difusa[3] = {1, 1, 1};
-    float especular[3] = {1, 1, 1};
-    float brilho = 90.0;
-    vertice vetorNormal;
-
-    textureManager->Bind(0);
     if(jogoComecou)
     {
-
-
+        float ambient[3]   = {1, 1, 1};
+        float difusa[3] = {1, 1, 1};
+        float especular[3] = {1, 1, 1};
+        float brilho = 90.0;
+        vertice vetorNormal;
+        textureManager->Bind(0);
         vertice v[8] =
         {
             {-5.0f, -3.0f,  0.0f},
@@ -1597,46 +1620,45 @@ void drawObject()
 
         ///
         drawBuracos();
-
         ///Object
         glPushMatrix();
         if(exibirObjeto)
         {
-            obj1X -= velObj1X/2;
-            obj1Y -= velObj1Y/2;
-            objectManager->SelectObject(selected);
-            objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
-            objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+            if( !jogoPausado) {
+                obj1X += velObj1X;
+                obj1Y += velObj1Y;
+            }
+            verificaPosicaoObj();
+            textureManager->Bind(0);
+
+            objectManager->SelectObject(0);
+            objectManager->SetShadingMode(SMOOTH_SHADING); // Alternative: FLAT_SHADING
+            objectManager->SetRenderMode(USE_TEXTURE_AND_MATERIAL);
             objectManager->Unitize();
-            objectManager->Scale(0.12);
-            glTranslatef(obj1X, obj1Y, 0.03);
+            objectManager->Scale(objSize);
+            glTranslatef(obj1X, obj1Y, 0.15);
             objectManager->Draw();
+
             verificaColisaoFotebolVermelha();
         }
         else
         {
-            atualizaTimer();
-            objectManager->SelectObject(selected);
-            objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
-            objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
+            textureManager->Bind(0);
+            objectManager->SelectObject(0);
+            objectManager->SetShadingMode(SMOOTH_SHADING); // Alternative: FLAT_SHADING
+            objectManager->SetRenderMode(USE_TEXTURE_AND_MATERIAL);
             objectManager->Unitize();
-            objectManager->Scale(0.001);
+            objectManager->Scale(0.00001);
             objectManager->Draw();
+
+            atualizaTimer();
         }
         glPopMatrix();
     }
     else
     {
-        glPushMatrix();
-        objectManager->SelectObject(selected);
-        objectManager->SetShadingMode(selectedShading); // Possible values: FLAT_SHADING e SMOOTH_SHADING
-        objectManager->SetRenderMode(selectedRender);     // Possible values: USE_COLOR, USE_MATERIAL, USE_TEXTURE (not available in this example)
-        objectManager->Unitize();
-        objectManager->Scale(0.001);
-        objectManager->Draw();
+        //  glDisable(GL_LIGHTING);
         glPopMatrix();
-        glPopMatrix();
-
         ///Desenha tela inicial
         drawTelaInicial();
     }
@@ -1848,6 +1870,8 @@ void mouse(int button, int state, int x, int y)
     }
     else if ( button == GLUT_LEFT_BUTTON )
     {
+        glEnable(GL_LIGHTING);                 // Habilita luz
+        glEnable(GL_LIGHT0);                   // habilita luz 0
         jogoComecou = true;
     }
 }
@@ -1875,7 +1899,7 @@ int main(int argc, char** argv)
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize (1000, 600);
     glutInitWindowPosition (100, 100);
-    glutCreateWindow (argv[0]);
+    glutCreateWindow ("Arkanoid openGL");
     init();
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);

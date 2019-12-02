@@ -42,7 +42,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1575232335 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
+1575249050 source:c:\users\stardust\desktop\arkanoidc-opengl\src\main.cpp
 	<GL/glew.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -54,11 +54,11 @@
 	"Bloco.h"
 	<vector>
 	<time.h>
-	"glcTexture.h"
 	<fstream>
 	<cstring>
 	<cstddef>
 	"glcWavefrontObject.h"
+	"glcTexture.h"
 
 1575134368 c:\users\stardust\desktop\arkanoidc-opengl\shared\windows\include\gl\glew.h
 	<stddef.h>
